@@ -1,0 +1,52 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+builds:
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  - "386"
+  ldflags:
+   - -X main.Commit={{.Commit}}
+- goos:
+  - linux
+  - darwin
+  - windows
+  goarch:
+  - amd64
+  - "386"
+  binary: lncli
+  main: ./cmd/lncli
+  ldflags:
+   - -X main.Commit={{.Commit}}
+archive:
+  name_template: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-v{{ .Version }}'
+  format: tar.gz
+  format_overrides:
+      - goos: windows
+        format: zip
+  files:
+  - none*
+  wrap_in_directory: true
+checksum:
+  name_template: 'manifest-{{ .Version }}.txt'
+snapshot:
+  name_template: SNAPSHOT-{{.Commit}}
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+sign:
+   artifacts: checksum
+git:
+  short_hash: true
+release:
+  prerelease: true
+  name_template: "{{.ProjectName}} v{{.Version}}"
+before:
+  hooks:
+    - make dep
