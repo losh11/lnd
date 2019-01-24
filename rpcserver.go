@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"net"
 	"net/http"
 	"sort"
 	"strings"
@@ -356,6 +357,8 @@ type rpcServer struct {
 
 	wg sync.WaitGroup
 
+	lis net.Listener
+
 	// subServers are a set of sub-RPC servers that use the same gRPC and
 	// listening sockets as the main RPC server, but which maintain their
 	// own independent service. This allows us to expose a set of
@@ -393,7 +396,7 @@ var _ lnrpc.LightningServer = (*rpcServer)(nil)
 // of the sub-servers that it maintains. The set of serverOpts should be the
 // base level options passed to the grPC server. This typically includes things
 // like requiring TLS, etc.
-func newRPCServer(s *server, macService *macaroons.Service,
+func newRPCServer(lis net.Listener, s *server, macService *macaroons.Service,
 	subServerCgs *subRPCServerConfigs, serverOpts []grpc.ServerOption,
 	restServerOpts []grpc.DialOption, atpl *autopilot.Manager,
 	tlsCfg *tls.Config) (*rpcServer, error) {
@@ -467,6 +470,7 @@ func newRPCServer(s *server, macService *macaroons.Service,
 	grpcServer := grpc.NewServer(serverOpts...)
 	rootRPCServer := &rpcServer{
 		restServerOpts: restServerOpts,
+		lis:            lis,
 		subServers:     subServers,
 		tlsCfg:         tlsCfg,
 		grpcServer:     grpcServer,
@@ -509,68 +513,79 @@ func (r *rpcServer) Start() error {
 		}
 	}
 
-	// With all the sub-servers started, we'll spin up the listeners for
-	// the main RPC server itself.
-	for _, listener := range cfg.RPCListeners {
-		lis, err := lncfg.ListenOnAddress(listener)
-		if err != nil {
-			ltndLog.Errorf(
-				"RPC server unable to listen on %s", listener,
-			)
-			return err
-		}
-
+	if r.lis != nil {
 		r.listenerCleanUp = append(r.listenerCleanUp, func() {
-			lis.Close()
+			r.lis.Close()
 		})
 
 		go func() {
-			rpcsLog.Infof("RPC server listening on %s", lis.Addr())
-			r.grpcServer.Serve(lis)
+			rpcsLog.Infof("RPC server listening on %s", r.lis.Addr())
+			r.grpcServer.Serve(r.lis)
 		}()
-	}
+	} else {
+		// With all the sub-servers started, we'll spin up the listeners for
+		// the main RPC server itself.
+		for _, listener := range cfg.RPCListeners {
+			lis, err := lncfg.ListenOnAddress(listener)
+			if err != nil {
+				ltndLog.Errorf(
+					"RPC server unable to listen on %s", listener,
+				)
+				return err
+			}
 
-	// Finally, start the REST proxy for our gRPC server above. We'll ensure
-	// we direct LND to connect to its loopback address rather than a
-	// wildcard to prevent certificate issues when accessing the proxy
-	// externally.
-	//
-	// TODO(roasbeef): eventually also allow the sub-servers to themselves
-	// have a REST proxy.
-	mux := proxy.NewServeMux()
-	grpcEndpoint := cfg.RPCListeners[0].String()
-	switch {
-	case strings.Contains(grpcEndpoint, "0.0.0.0"):
-		grpcEndpoint = strings.Replace(
-			grpcEndpoint, "0.0.0.0", "127.0.0.1", 1,
+			r.listenerCleanUp = append(r.listenerCleanUp, func() {
+				lis.Close()
+			})
+
+			go func() {
+				rpcsLog.Infof("RPC server listening on %s", lis.Addr())
+				r.grpcServer.Serve(lis)
+			}()
+		}
+
+		// Finally, start the REST proxy for our gRPC server above. We'll ensure
+		// we direct LND to connect to its loopback address rather than a
+		// wildcard to prevent certificate issues when accessing the proxy
+		// externally.
+		//
+		// TODO(roasbeef): eventually also allow the sub-servers to themselves
+		// have a REST proxy.
+		mux := proxy.NewServeMux()
+		grpcEndpoint := cfg.RPCListeners[0].String()
+		switch {
+		case strings.Contains(grpcEndpoint, "0.0.0.0"):
+			grpcEndpoint = strings.Replace(
+				grpcEndpoint, "0.0.0.0", "127.0.0.1", 1,
+			)
+		case strings.Contains(grpcEndpoint, "[::]"):
+			grpcEndpoint = strings.Replace(grpcEndpoint, "[::]", "[::1]", 1)
+		}
+		err := lnrpc.RegisterLightningHandlerFromEndpoint(
+			context.Background(), mux, grpcEndpoint, r.restServerOpts,
 		)
-	case strings.Contains(grpcEndpoint, "[::]"):
-		grpcEndpoint = strings.Replace(grpcEndpoint, "[::]", "[::1]", 1)
-	}
-	err := lnrpc.RegisterLightningHandlerFromEndpoint(
-		context.Background(), mux, grpcEndpoint, r.restServerOpts,
-	)
-	if err != nil {
-		return err
-	}
-	for _, restEndpoint := range cfg.RESTListeners {
-		lis, err := lncfg.TLSListenOnAddress(restEndpoint, r.tlsCfg)
 		if err != nil {
-			ltndLog.Errorf(
-				"gRPC proxy unable to listen on %s",
-				restEndpoint,
-			)
 			return err
 		}
+		for _, restEndpoint := range cfg.RESTListeners {
+			lis, err := lncfg.TLSListenOnAddress(restEndpoint, r.tlsCfg)
+			if err != nil {
+				ltndLog.Errorf(
+					"gRPC proxy unable to listen on %s",
+					restEndpoint,
+				)
+				return err
+			}
 
-		r.listenerCleanUp = append(r.listenerCleanUp, func() {
-			lis.Close()
-		})
+			r.listenerCleanUp = append(r.listenerCleanUp, func() {
+				lis.Close()
+			})
 
-		go func() {
-			rpcsLog.Infof("gRPC proxy started at %s", lis.Addr())
-			http.Serve(lis, mux)
-		}()
+			go func() {
+				rpcsLog.Infof("gRPC proxy started at %s", lis.Addr())
+				http.Serve(lis, mux)
+			}()
+		}
 	}
 
 	return nil
