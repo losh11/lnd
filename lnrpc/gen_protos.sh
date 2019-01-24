@@ -6,6 +6,8 @@ echo "Generating root gRPC server protos"
 protoc -I/usr/local/include -I. \
        -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
        --go_out=plugins=grpc,paths=source_relative:. \
+       --swift_out=. \
+       --js_out=import_style=commonjs,binary:. \
        rpc.proto
 
 # Generate the REST reverse proxy.
