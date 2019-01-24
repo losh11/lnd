@@ -1,4 +1,4 @@
-package main
+package lnd
 
 import (
 	"crypto/sha256"
