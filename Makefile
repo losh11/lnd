@@ -1,5 +1,6 @@
 PKG := github.com/lightningnetwork/lnd
 ESCPKG := github.com\/lightningnetwork\/lnd
+MOBILE_PKG := $(PKG)/mobile
 
 BTCD_PKG := github.com/btcsuite/btcd
 GOVERALLS_PKG := github.com/mattn/goveralls
@@ -7,10 +8,13 @@ LINT_PKG := gopkg.in/alecthomas/gometalinter.v2
 
 GO_BIN := ${GOPATH}/bin
 BTCD_BIN := $(GO_BIN)/btcd
+GOMOBILE_BIN := $(GO_BIN)/gomobile
 GOVERALLS_BIN := $(GO_BIN)/goveralls
 LINT_BIN := $(GO_BIN)/gometalinter.v2
 
 BTCD_DIR :=${GOPATH}/src/$(BTCD_PKG)
+MOBILE_BUILD_DIR :=${GOPATH}/src/$(MOBILE_PKG)/build
+IOS_BUILD := $(MOBILE_BUILD_DIR)/ios/Lndmobile.framework
 
 COMMIT := $(shell git describe --abbrev=40 --dirty)
 LDFLAGS := -ldflags "-X $(PKG)/build.Commit=$(COMMIT)"
@@ -185,6 +189,12 @@ rpc:
 	cd ./lnrpc; ./gen_protos.sh
 	cd ./mobile; ./gen_bindings.sh
 
+ios:
+	@$(call print, "Building iOS framework ($(IOS_BUILD)).")
+	$(GOMOBILE_BIN) bind -target=ios -tags="ios $(DEV_TAGS) experimental" $(LDFLAGS) -v -o $(IOS_BUILD) $(MOBILE_PKG)
+
+mobile: ios
+
 clean:
 	@$(call print, "Cleaning source.$(NC)")
 	$(RM) ./lnd-debug ./lncli-debug
@@ -213,4 +223,5 @@ clean:
 	lint \
 	list \
 	rpc \
+	mobile \
 	clean
