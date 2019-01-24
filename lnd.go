@@ -92,10 +92,10 @@ var (
 // Main is the true entry point for lnd. This function is required since defers
 // created in the top-level scope of a main method aren't executed if os.Exit()
 // is called.
-func Main() error {
+func Main(appDir string) error {
 	// Load the configuration, and parse any command line options. This
 	// function will also set up logging properly.
-	loadedConfig, err := loadConfig()
+	loadedConfig, err := loadConfig(appDir)
 	if err != nil {
 		return err
 	}

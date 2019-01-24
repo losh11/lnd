@@ -257,9 +257,15 @@ type config struct {
 // 	2) Pre-parse the command line to check for an alternative config file
 // 	3) Load configuration file overwriting defaults with any specified options
 // 	4) Parse CLI options and overwrite/add any specified options
-func loadConfig() (*config, error) {
+func loadConfig(appDir string) (*config, error) {
+
+	// If appDir is not specified, we'll use the default directory.
+	if appDir == "" {
+		appDir = defaultLndDir
+	}
+
 	defaultCfg := config{
-		LndDir:         defaultLndDir,
+		LndDir:         appDir,
 		ConfigFile:     defaultConfigFile,
 		DataDir:        defaultDataDir,
 		DebugLevel:     defaultLogLevel,
@@ -376,9 +382,10 @@ func loadConfig() (*config, error) {
 		return nil, err
 	}
 
+	lndDir := cleanAndExpandPath(cfg.LndDir)
+
 	// If the provided lnd directory is not the default, we'll modify the
 	// path to all of the files and directories that will live within it.
-	lndDir := cleanAndExpandPath(cfg.LndDir)
 	if lndDir != defaultLndDir {
 		cfg.DataDir = filepath.Join(lndDir, defaultDataDirname)
 		cfg.TLSCertPath = filepath.Join(lndDir, defaultTLSCertFilename)
