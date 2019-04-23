@@ -65,8 +65,8 @@ func getWalletUnlockerClient() (lnrpc.WalletUnlockerClient, func(), error) {
 // method should be used to commit the newly generated seed, and create the
 // wallet.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GenSeed(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -102,8 +102,8 @@ func GenSeed(msg []byte, callback Callback) {
 // seed, then present it to the user. Once it has been verified by the user,
 // the seed can be fed into this RPC in order to commit the new wallet.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func InitWallet(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -129,8 +129,8 @@ func InitWallet(msg []byte, callback Callback) {
 // UnlockWallet is used at startup of lnd to provide a password to unlock
 // the wallet database.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func UnlockWallet(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -156,8 +156,8 @@ func UnlockWallet(msg []byte, callback Callback) {
 // ChangePassword changes the password of the encrypted wallet. This will
 // automatically unlock the wallet database if successful.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ChangePassword(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {

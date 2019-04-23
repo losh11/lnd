@@ -60,8 +60,8 @@ func getLightningClient() (lnrpc.LightningClient, func(), error) {
 // confirmed unspent outputs and all unconfirmed unspent outputs under control
 // of the wallet.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func WalletBalance(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -87,8 +87,8 @@ func WalletBalance(msg []byte, callback Callback) {
 // ChannelBalance returns the total funds available across all open channels
 // in satoshis.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ChannelBalance(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -114,8 +114,8 @@ func ChannelBalance(msg []byte, callback Callback) {
 // GetTransactions returns a list describing all the known transactions
 // relevant to the wallet.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GetTransactions(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -144,8 +144,8 @@ func GetTransactions(msg []byte, callback Callback) {
 // consult its fee model to determine a fee for the default confirmation
 // target.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func SendCoins(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -171,8 +171,8 @@ func SendCoins(msg []byte, callback Callback) {
 // ListUnspent returns a list of all utxos spendable by the wallet with a
 // number of confirmations between the specified minimum and maximum.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ListUnspent(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -199,10 +199,10 @@ func ListUnspent(msg []byte, callback Callback) {
 // the client in which any newly discovered transactions relevant to the
 // wallet are sent over.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced.
-func SubscribeTransactions(msg []byte, callback Callback) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func SubscribeTransactions(msg []byte, rStream RecvStream) {
 	s := &readStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.GetTransactionsRequest{}
@@ -229,7 +229,7 @@ func SubscribeTransactions(msg []byte, callback Callback) {
 			}, close, nil
 		},
 	}
-	s.start(msg, callback)
+	s.start(msg, rStream)
 }
 
 // SendMany handles a request for a transaction that creates multiple specified
@@ -237,8 +237,8 @@ func SubscribeTransactions(msg []byte, callback Callback) {
 // the internal wallet will consult its fee model to determine a fee for the
 // default confirmation target.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func SendMany(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -263,8 +263,8 @@ func SendMany(msg []byte, callback Callback) {
 
 // NewAddress creates a new address under control of the local wallet.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func NewAddress(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -291,8 +291,8 @@ func NewAddress(msg []byte, callback Callback) {
 // signature string is `zbase32` encoded and pubkey recoverable, meaning that
 // only the message digest and signature are needed for verification.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func SignMessage(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -320,8 +320,8 @@ func SignMessage(msg []byte, callback Callback) {
 // channel database. In addition to returning the validity of the signature,
 // VerifyMessage also returns the recovered pubkey from the signature.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func VerifyMessage(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -348,8 +348,8 @@ func VerifyMessage(msg []byte, callback Callback) {
 // the networking level, and is used for communication between nodes. This is
 // distinct from establishing a channel with a peer.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ConnectPeer(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -376,8 +376,8 @@ func ConnectPeer(msg []byte, callback Callback) {
 // given pubKey. In the case that we currently have a pending or active channel
 // with the target peer, then this action will be not be allowed.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func DisconnectPeer(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -402,8 +402,8 @@ func DisconnectPeer(msg []byte, callback Callback) {
 
 // ListPeers returns a verbose listing of all currently active peers.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ListPeers(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -430,8 +430,8 @@ func ListPeers(msg []byte, callback Callback) {
 // it's identity pubkey, alias, the chains it is connected to, and information
 // concerning the number of open+pending channels.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GetInfo(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -459,8 +459,8 @@ func GetInfo(msg []byte, callback Callback) {
 // workflow and is waiting for confirmations for the funding txn, or is in the
 // process of closure, either initiated cooperatively or non-cooperatively.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func PendingChannels(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -486,8 +486,8 @@ func PendingChannels(msg []byte, callback Callback) {
 // ListChannels returns a description of all the open channels that this node
 // is a participant in.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ListChannels(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -513,8 +513,8 @@ func ListChannels(msg []byte, callback Callback) {
 // ClosedChannels returns a description of all the closed channels that
 // this node was a participant in.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ClosedChannels(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -542,8 +542,8 @@ func ClosedChannels(msg []byte, callback Callback) {
 // other sync calls, all byte slices are intended to be populated as hex
 // encoded strings.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func OpenChannelSync(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -572,10 +572,10 @@ func OpenChannelSync(msg []byte, callback Callback) {
 // rate to us for the funding transaction. If neither are specified, then a
 // lax block confirmation target is used.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced.
-func OpenChannel(msg []byte, callback Callback) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func OpenChannel(msg []byte, rStream RecvStream) {
 	s := &readStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.OpenChannelRequest{}
@@ -602,7 +602,7 @@ func OpenChannel(msg []byte, callback Callback) {
 			}, close, nil
 		},
 	}
-	s.start(msg, callback)
+	s.start(msg, rStream)
 }
 
 // CloseChannel attempts to close an active channel identified by its channel
@@ -613,10 +613,10 @@ func OpenChannel(msg []byte, callback Callback) {
 // closure transaction is confirmed, or a manual fee rate. If neither are
 // specified, then a default lax, block confirmation target is used.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced.
-func CloseChannel(msg []byte, callback Callback) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func CloseChannel(msg []byte, rStream RecvStream) {
 	s := &readStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.CloseChannelRequest{}
@@ -643,7 +643,7 @@ func CloseChannel(msg []byte, callback Callback) {
 			}, close, nil
 		},
 	}
-	s.start(msg, callback)
+	s.start(msg, rStream)
 }
 
 // AbandonChannel removes all channel state from the database except for a
@@ -651,8 +651,8 @@ func CloseChannel(msg []byte, callback Callback) {
 // channels due to bugs fixed in newer versions of lnd. Only available
 // when in debug builds of lnd.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func AbandonChannel(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -680,11 +680,11 @@ func AbandonChannel(msg []byte, callback Callback) {
 // bi-directional stream allowing clients to rapidly send payments through the
 // Lightning Network with a single persistent connection.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced. The send stream can accept zero
-// or more requests before it is closed.
-func SendPayment(callback Callback) (SendStream, error) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced. The send stream can accept zero or more requests before it
+// is closed.
+func SendPayment(rStream RecvStream) (SendStream, error) {
 	b := &biStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.SendRequest{}
@@ -716,7 +716,7 @@ func SendPayment(callback Callback) (SendStream, error) {
 				}, close, nil
 		},
 	}
-	return b.start(callback)
+	return b.start(rStream)
 }
 
 // SendPaymentSync is the synchronous non-streaming version of SendPayment.
@@ -724,8 +724,8 @@ func SendPayment(callback Callback) (SendStream, error) {
 // Additionally, this RPC expects the destination's public key and the payment
 // hash (if any) to be encoded as hex strings.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func SendPaymentSync(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -753,11 +753,11 @@ func SendPaymentSync(msg []byte, callback Callback) {
 // allows users to specify a full route manually. This can be used for things
 // like rebalancing, and atomic swaps.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced. The send stream can accept zero
-// or more requests before it is closed.
-func SendToRoute(callback Callback) (SendStream, error) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced. The send stream can accept zero or more requests before it
+// is closed.
+func SendToRoute(rStream RecvStream) (SendStream, error) {
 	b := &biStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.SendToRouteRequest{}
@@ -789,14 +789,14 @@ func SendToRoute(callback Callback) (SendStream, error) {
 				}, close, nil
 		},
 	}
-	return b.start(callback)
+	return b.start(rStream)
 }
 
 // SendToRouteSync is a synchronous version of SendToRoute. It Will block
 // until the payment either fails or succeeds.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func SendToRouteSync(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -823,8 +823,8 @@ func SendToRouteSync(msg []byte, callback Callback) {
 // duplicated invoices are rejected, therefore all invoices *must* have a
 // unique payment preimage.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func AddInvoice(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -857,8 +857,8 @@ func AddInvoice(msg []byte, callback Callback) {
 // flag to false. If none of the parameters are specified, then the last 100
 // invoices will be returned.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ListInvoices(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -885,8 +885,8 @@ func ListInvoices(msg []byte, callback Callback) {
 // The passed payment hash *must* be exactly 32 bytes, if not, an error is
 // returned.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func LookupInvoice(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -919,10 +919,10 @@ func LookupInvoice(msg []byte, callback Callback) {
 // of these fields can be set. If no fields are set, then we'll only send out
 // the latest add/settle events.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced.
-func SubscribeInvoices(msg []byte, callback Callback) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func SubscribeInvoices(msg []byte, rStream RecvStream) {
 	s := &readStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.InvoiceSubscription{}
@@ -949,15 +949,15 @@ func SubscribeInvoices(msg []byte, callback Callback) {
 			}, close, nil
 		},
 	}
-	s.start(msg, callback)
+	s.start(msg, rStream)
 }
 
 // DecodePayReq takes an encoded payment request string and attempts to decode
 // it, returning a full description of the conditions encoded within the
 // payment request.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func DecodePayReq(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -982,8 +982,8 @@ func DecodePayReq(msg []byte, callback Callback) {
 
 // ListPayments returns a list of all outgoing payments.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ListPayments(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1008,8 +1008,8 @@ func ListPayments(msg []byte, callback Callback) {
 
 // DeleteAllPayments deletes all outgoing payments from DB.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func DeleteAllPayments(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1039,8 +1039,8 @@ func DeleteAllPayments(msg []byte, callback Callback) {
 // the node directional specific routing policy which includes: the time lock
 // delta, fee information, etc.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func DescribeGraph(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1068,8 +1068,8 @@ func DescribeGraph(msg []byte, callback Callback) {
 // uniquely identifies the location of transaction's funding output within the
 // blockchain.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GetChanInfo(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1095,8 +1095,8 @@ func GetChanInfo(msg []byte, callback Callback) {
 // GetNodeInfo returns the latest advertised, aggregated, and authenticated
 // channel information for the specified node identified by its public key.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GetNodeInfo(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1125,8 +1125,8 @@ func GetNodeInfo(msg []byte, callback Callback) {
 // send an HTLC, also including the necessary information that should be
 // present within the Sphinx packet encapsulated within the HTLC.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func QueryRoutes(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1152,8 +1152,8 @@ func QueryRoutes(msg []byte, callback Callback) {
 // GetNetworkInfo returns some basic stats about the known channel graph from
 // the point of view of the node.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func GetNetworkInfo(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1179,8 +1179,8 @@ func GetNetworkInfo(msg []byte, callback Callback) {
 // StopDaemon will send a shutdown request to the interrupt handler, triggering
 // a graceful shutdown of the daemon.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func StopDaemon(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1210,10 +1210,10 @@ func StopDaemon(msg []byte, callback Callback) {
 // channels being advertised, updates in the routing policy for a directional
 // channel edge, and when channels are closed on-chain.
 //
-// NOTE: This method produces a stream of responses, and the callback
-// can be called zero or more times. After EOF error is returned, no
-// more responses will be produced.
-func SubscribeChannelGraph(msg []byte, callback Callback) {
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func SubscribeChannelGraph(msg []byte, rStream RecvStream) {
 	s := &readStreamHandler{
 		newProto: func() proto.Message {
 			return &lnrpc.GraphTopologySubscription{}
@@ -1240,7 +1240,7 @@ func SubscribeChannelGraph(msg []byte, callback Callback) {
 			}, close, nil
 		},
 	}
-	s.start(msg, callback)
+	s.start(msg, rStream)
 }
 
 // DebugLevel allows a caller to programmatically set the logging verbosity of
@@ -1248,8 +1248,8 @@ func SubscribeChannelGraph(msg []byte, callback Callback) {
 // level, or in a granular fashion to specify the logging for a target
 // sub-system.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func DebugLevel(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1275,8 +1275,8 @@ func DebugLevel(msg []byte, callback Callback) {
 // FeeReport allows the caller to obtain a report detailing the current fee
 // schedule enforced by the node globally for each channel.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func FeeReport(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1302,8 +1302,8 @@ func FeeReport(msg []byte, callback Callback) {
 // UpdateChannelPolicy allows the caller to update the fee schedule and
 // channel policies for all channels globally, or a particular channel.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func UpdateChannelPolicy(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
@@ -1337,8 +1337,8 @@ func UpdateChannelPolicy(msg []byte, callback Callback) {
 // the index offset of the last entry. The index offset can be provided to the
 // request to allow the caller to skip a series of records.
 //
-// NOTE: This method produces a single result or error, and the callback
-// will be called only once.
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
 func ForwardingHistory(msg []byte, callback Callback) {
 	s := &syncHandler{
 		newProto: func() proto.Message {
