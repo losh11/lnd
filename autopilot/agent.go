@@ -113,7 +113,8 @@ type Agent struct {
 	cfg Config
 
 	// chanState tracks the current set of open channels.
-	chanState channelState
+	chanState    channelState
+	chanStateMtx sync.Mutex
 
 	// stateUpdates is a channel that any external state updates that may
 	// affect the heuristics of the agent will be sent over.
@@ -410,7 +411,9 @@ func (a *Agent) controller() {
 					spew.Sdump(update.newChan))
 
 				newChan := update.newChan
+				a.chanStateMtx.Lock()
 				a.chanState[newChan.ChanID] = newChan
+				a.chanStateMtx.Unlock()
 
 				a.pendingMtx.Lock()
 				delete(a.pendingOpens, newChan.Node)
@@ -424,9 +427,11 @@ func (a *Agent) controller() {
 					"updates: %v",
 					spew.Sdump(update.closedChans))
 
+				a.chanStateMtx.Lock()
 				for _, closedChan := range update.closedChans {
 					delete(a.chanState, closedChan)
 				}
+				a.chanStateMtx.Unlock()
 
 				updateBalance()
 			}
@@ -472,10 +477,11 @@ func (a *Agent) controller() {
 		// With all the updates applied, we'll obtain a set of the
 		// current active channels (confirmed channels), and also
 		// factor in our set of unconfirmed channels.
-		confirmedChans := a.chanState
+		a.chanStateMtx.Lock()
 		a.pendingMtx.Lock()
-		totalChans := mergeChanState(a.pendingOpens, confirmedChans)
+		totalChans := mergeChanState(a.pendingOpens, a.chanState)
 		a.pendingMtx.Unlock()
+		a.chanStateMtx.Unlock()
 
 		// Now that we've updated our internal state, we'll consult our
 		// channel attachment heuristic to determine if we can open
@@ -514,7 +520,10 @@ func (a *Agent) openChans(availableFunds btcutil.Amount, numChans uint32,
 	// We're to attempt an attachment so we'll obtain the set of
 	// nodes that we currently have channels with so we avoid
 	// duplicate edges.
+	a.chanStateMtx.Lock()
 	connectedNodes := a.chanState.ConnectedNodes()
+	a.chanStateMtx.Unlock()
+
 	a.pendingMtx.Lock()
 	nodesToSkip := mergeNodeMaps(a.pendingOpens,
 		a.pendingConns, connectedNodes, a.failedNodes,
@@ -558,8 +567,13 @@ func (a *Agent) openChans(availableFunds btcutil.Amount, numChans uint32,
 
 	// As channel size we'll use the maximum channel size available.
 	chanSize := a.cfg.Constraints.MaxChanSize()
-	if availableFunds-chanSize < 0 {
+	if availableFunds < chanSize {
 		chanSize = availableFunds
+	}
+
+	if chanSize < a.cfg.Constraints.MinChanSize() {
+		return fmt.Errorf("not enough funds available to open a " +
+			"single channel")
 	}
 
 	// Use the heuristic to calculate a score for each node in the
@@ -590,6 +604,17 @@ func (a *Agent) openChans(availableFunds btcutil.Amount, numChans uint32,
 		// so we'll skip it.
 		if len(addrs) == 0 {
 			continue
+		}
+
+		// Track the available funds we have left.
+		if availableFunds < chanSize {
+			chanSize = availableFunds
+		}
+		availableFunds -= chanSize
+
+		// If we run out of funds, we can break early.
+		if chanSize < a.cfg.Constraints.MinChanSize() {
+			break
 		}
 
 		chanCandidates[nID] = &AttachmentDirective{
@@ -658,7 +683,40 @@ func (a *Agent) executeDirective(directive AttachmentDirective) {
 		return
 	}
 
-	alreadyConnected, err := a.cfg.ConnectToPeer(pub, directive.Addrs)
+	connected := make(chan bool)
+	errChan := make(chan error)
+
+	// To ensure a call to ConnectToPeer doesn't block the agent from
+	// shutting down, we'll launch it in a non-waitgrouped goroutine, that
+	// will signal when a result is returned.
+	// TODO(halseth): use DialContext to cancel on transport level.
+	go func() {
+		alreadyConnected, err := a.cfg.ConnectToPeer(
+			pub, directive.Addrs,
+		)
+		if err != nil {
+			select {
+			case errChan <- err:
+			case <-a.quit:
+			}
+			return
+		}
+
+		select {
+		case connected <- alreadyConnected:
+		case <-a.quit:
+			return
+		}
+	}()
+
+	var alreadyConnected bool
+	select {
+	case alreadyConnected = <-connected:
+	case err = <-errChan:
+	case <-a.quit:
+		return
+	}
+
 	if err != nil {
 		log.Warnf("Unable to connect to %x: %v",
 			pub.SerializeCompressed(), err)
@@ -683,8 +741,7 @@ func (a *Agent) executeDirective(directive AttachmentDirective) {
 	// fewer slots were available, and other successful attempts finished
 	// first.
 	a.pendingMtx.Lock()
-	if uint16(len(a.pendingOpens)) >=
-		a.cfg.Constraints.MaxPendingOpens() {
+	if uint16(len(a.pendingOpens)) >= a.cfg.Constraints.MaxPendingOpens() {
 		// Since we've reached our max number of pending opens, we'll
 		// disconnect this peer and exit. However, if we were
 		// previously connected to them, then we'll make sure to
@@ -757,5 +814,8 @@ func (a *Agent) executeDirective(directive AttachmentDirective) {
 
 	// Since the channel open was successful and is currently pending,
 	// we'll trigger the autopilot agent to query for more peers.
+	// TODO(halseth): this triggers a new loop before all the new channels
+	// are added to the pending channels map. Should add before executing
+	// directive in goroutine?
 	a.OnChannelPendingOpen()
 }

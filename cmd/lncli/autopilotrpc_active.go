@@ -94,6 +94,55 @@ func disable(ctx *cli.Context) error {
 	return nil
 }
 
+var queryScoresCommand = cli.Command{
+	Name:        "query",
+	Usage:       "Query the autopilot heuristcs for nodes' scores.",
+	ArgsUsage:   "[flags] <pubkey> <pubkey> <pubkey> ...",
+	Description: "",
+	Action:      actionDecorator(queryScores),
+	Flags: []cli.Flag{
+		cli.BoolFlag{
+			Name: "ignorelocalstate, i",
+			Usage: "Ignore local channel state when calculating " +
+				"scores.",
+		},
+	},
+}
+
+func queryScores(ctx *cli.Context) error {
+	ctxb := context.Background()
+	client, cleanUp := getAutopilotClient(ctx)
+	defer cleanUp()
+
+	args := ctx.Args()
+	var pubs []string
+
+	// Keep reading pubkeys as long as there are arguments.
+loop:
+	for {
+		switch {
+		case args.Present():
+			pubs = append(pubs, args.First())
+			args = args.Tail()
+		default:
+			break loop
+		}
+	}
+
+	req := &autopilotrpc.QueryScoresRequest{
+		Pubkeys:          pubs,
+		IgnoreLocalState: ctx.Bool("ignorelocalstate"),
+	}
+
+	resp, err := client.QueryScores(ctxb, req)
+	if err != nil {
+		return err
+	}
+
+	printRespJSON(resp)
+	return nil
+}
+
 // autopilotCommands will return the set of commands to enable for autopilotrpc
 // builds.
 func autopilotCommands() []cli.Command {
@@ -107,6 +156,7 @@ func autopilotCommands() []cli.Command {
 				getStatusCommand,
 				enableCommand,
 				disableCommand,
+				queryScoresCommand,
 			},
 		},
 	}

@@ -1,6 +1,7 @@
 package autopilot
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 
@@ -264,6 +265,119 @@ func (m *Manager) StopAgent() error {
 	m.pilot = nil
 
 	log.Debugf("Manager stopped autopilot agent")
+
+	return nil
+}
+
+// QueryHeuristics queries the available autopilot heuristics for node scores.
+func (m *Manager) QueryHeuristics(nodes []NodeID, localState bool) (
+	HeuristicScores, error) {
+
+	m.Lock()
+	defer m.Unlock()
+
+	n := make(map[NodeID]struct{})
+	for _, node := range nodes {
+		n[node] = struct{}{}
+	}
+
+	log.Debugf("Querying heuristics for %d nodes", len(n))
+	return m.queryHeuristics(n, localState)
+}
+
+// HeuristicScores is an alias for a map that maps heuristic names to a map of
+// scores for pubkeys.
+type HeuristicScores map[string]map[NodeID]float64
+
+// queryHeuristics gets node scores from all available simple heuristics, and
+// the agent's current active heuristic.
+//
+// NOTE: Must be called with the manager's lock.
+func (m *Manager) queryHeuristics(nodes map[NodeID]struct{}, localState bool) (
+	HeuristicScores, error) {
+
+	// If we want to take the local state into action when querying the
+	// heuristics, we fetch it. If not we'll just pass an emply slice to
+	// the heuristic.
+	var totalChans []Channel
+	var err error
+	if localState {
+		// Fetch the current set of channels.
+		totalChans, err = m.cfg.ChannelState()
+		if err != nil {
+			return nil, err
+		}
+
+		// If the agent is active, we can merge the channel state with
+		// the channels pending open.
+		if m.pilot != nil {
+			m.pilot.chanStateMtx.Lock()
+			m.pilot.pendingMtx.Lock()
+			totalChans = mergeChanState(
+				m.pilot.pendingOpens, m.pilot.chanState,
+			)
+			m.pilot.pendingMtx.Unlock()
+			m.pilot.chanStateMtx.Unlock()
+		}
+	}
+
+	// As channel size we'll use the maximum size.
+	chanSize := m.cfg.PilotCfg.Constraints.MaxChanSize()
+
+	// We'll start by getting the scores from each available sub-heuristic,
+	// in addition the current agent heuristic.
+	report := make(HeuristicScores)
+	for _, h := range append(availableHeuristics, m.cfg.PilotCfg.Heuristic) {
+		name := h.Name()
+
+		// If the agent heuristic is among the simple heuristics it
+		// might get queried more than once. As an optimization we'll
+		// just skip it the second time.
+		if _, ok := report[name]; ok {
+			continue
+		}
+
+		s, err := h.NodeScores(
+			m.cfg.PilotCfg.Graph, totalChans, chanSize, nodes,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("unable to get sub score: %v",
+				err)
+		}
+
+		log.Debugf("Heuristic \"%v\" scored %d nodes", name, len(s))
+
+		scores := make(map[NodeID]float64)
+		for nID, score := range s {
+			scores[nID] = score.Score
+		}
+
+		report[name] = scores
+	}
+
+	return report, nil
+}
+
+// SetNodeScores is used to set the scores of the given heuristic, if it is
+// active, and ScoreSettable.
+func (m *Manager) SetNodeScores(name string, scores map[NodeID]float64) error {
+	// It must be ScoreSettable to be available for external
+	// scores.
+	s, ok := m.cfg.PilotCfg.Heuristic.(ScoreSettable)
+	if !ok {
+		return fmt.Errorf("current heuristic doesn't support " +
+			"external scoring")
+	}
+
+	// Heuristic was found, set its node scores.
+	applied, err := s.SetNodeScores(name, scores)
+	if err != nil {
+		return err
+	}
+
+	if !applied {
+		return fmt.Errorf("heuristic with name %v not found", name)
+	}
 
 	return nil
 }

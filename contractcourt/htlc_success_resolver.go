@@ -7,7 +7,11 @@ import (
 
 	"github.com/btcsuite/btcd/wire"
 	"github.com/davecgh/go-spew/spew"
+	"github.com/lightningnetwork/lnd/channeldb"
+	"github.com/lightningnetwork/lnd/input"
+	"github.com/lightningnetwork/lnd/lntypes"
 	"github.com/lightningnetwork/lnd/lnwallet"
+	"github.com/lightningnetwork/lnd/lnwire"
 	"github.com/lightningnetwork/lnd/sweep"
 )
 
@@ -37,7 +41,7 @@ type htlcSuccessResolver struct {
 	broadcastHeight uint32
 
 	// payHash is the payment hash of the original HTLC extended to us.
-	payHash [32]byte
+	payHash lntypes.Hash
 
 	// sweepTx will be non-nil if we've already crafted a transaction to
 	// sweep a direct HTLC output. This is only a concern if we're sweeping
@@ -45,6 +49,10 @@ type htlcSuccessResolver struct {
 	//
 	// TODO(roasbeef): send off to utxobundler
 	sweepTx *wire.MsgTx
+
+	// htlcAmt is the original amount of the htlc, not taking into
+	// account any fees that may have to be paid if it goes on chain.
+	htlcAmt lnwire.MilliSatoshi
 
 	ResolverKit
 }
@@ -97,7 +105,7 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 			// need to create an input which contains all the items
 			// required to add this input to a sweeping transaction,
 			// and generate a witness.
-			input := sweep.MakeHtlcSucceedInput(
+			inp := input.MakeHtlcSucceedInput(
 				&h.htlcResolution.ClaimOutpoint,
 				&h.htlcResolution.SweepSignDesc,
 				h.htlcResolution.Preimage[:],
@@ -115,7 +123,7 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 			// TODO: Use time-based sweeper and result chan.
 			var err error
 			h.sweepTx, err = h.Sweeper.CreateSweepTx(
-				[]sweep.Input{&input},
+				[]input.Input{&inp},
 				sweep.FeePreference{
 					ConfTarget: sweepConfTarget,
 				}, 0,
@@ -139,7 +147,7 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 		// constructed, we'll broadcast the sweep transaction to the
 		// network.
 		err := h.PublishTx(h.sweepTx)
-		if err != nil && err != lnwallet.ErrDoubleSpend {
+		if err != nil {
 			log.Infof("%T(%x): unable to publish tx: %v",
 				h, h.payHash[:], err)
 			return nil, err
@@ -169,6 +177,19 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 			return nil, fmt.Errorf("quitting")
 		}
 
+		// With the HTLC claimed, we can attempt to settle its
+		// corresponding invoice if we were the original destination. As
+		// the htlc is already settled at this point, we don't need to
+		// read on the hodl channel.
+		hodlChan := make(chan interface{}, 1)
+		_, err = h.Registry.NotifyExitHopHtlc(
+			h.payHash, h.htlcAmt, hodlChan,
+		)
+		if err != nil && err != channeldb.ErrInvoiceNotFound {
+			log.Errorf("Unable to settle invoice with payment "+
+				"hash %x: %v", h.payHash, err)
+		}
+
 		// Once the transaction has received a sufficient number of
 		// confirmations, we'll mark ourselves as fully resolved and exit.
 		h.resolved = true
@@ -183,7 +204,7 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 	//
 	// TODO(roasbeef): after changing sighashes send to tx bundler
 	err := h.PublishTx(h.htlcResolution.SignedSuccessTx)
-	if err != nil && err != lnwallet.ErrDoubleSpend {
+	if err != nil {
 		return nil, err
 	}
 
@@ -232,6 +253,17 @@ func (h *htlcSuccessResolver) Resolve() (ContractResolver, error) {
 
 	case <-h.Quit:
 		return nil, fmt.Errorf("quitting")
+	}
+
+	// With the HTLC claimed, we can attempt to settle its corresponding
+	// invoice if we were the original destination. As the htlc is already
+	// settled at this point, we don't need to read on the hodl
+	// channel.
+	hodlChan := make(chan interface{}, 1)
+	_, err = h.Registry.NotifyExitHopHtlc(h.payHash, h.htlcAmt, hodlChan)
+	if err != nil && err != channeldb.ErrInvoiceNotFound {
+		log.Errorf("Unable to settle invoice with payment "+
+			"hash %x: %v", h.payHash, err)
 	}
 
 	h.resolved = true

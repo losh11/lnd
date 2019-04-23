@@ -23,7 +23,9 @@ import (
 
 	"github.com/lightningnetwork/lnd/chainntnfs"
 	"github.com/lightningnetwork/lnd/channeldb"
+	"github.com/lightningnetwork/lnd/discovery"
 	"github.com/lightningnetwork/lnd/htlcswitch"
+	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/keychain"
 	"github.com/lightningnetwork/lnd/lnpeer"
 	"github.com/lightningnetwork/lnd/lnrpc"
@@ -169,6 +171,10 @@ func (n *testNode) SendMessage(_ bool, msg ...lnwire.Message) error {
 	return n.sendMessage(msg[0])
 }
 
+func (n *testNode) SendMessageLazy(sync bool, msgs ...lnwire.Message) error {
+	return n.SendMessage(sync, msgs...)
+}
+
 func (n *testNode) WipeChannel(_ *wire.OutPoint) error {
 	return nil
 }
@@ -202,7 +208,7 @@ func (n *testNode) AddNewChannel(channel *channeldb.OpenChannel,
 
 func createTestWallet(cdb *channeldb.DB, netParams *chaincfg.Params,
 	notifier chainntnfs.ChainNotifier, wc lnwallet.WalletController,
-	signer lnwallet.Signer, keyRing keychain.SecretKeyRing,
+	signer input.Signer, keyRing keychain.SecretKeyRing,
 	bio lnwallet.BlockChainIO,
 	estimator lnwallet.FeeEstimator) (*lnwallet.LightningWallet, error) {
 
@@ -283,7 +289,9 @@ func createTestFundingManager(t *testing.T, privKey *btcec.PrivateKey,
 		SignMessage: func(pubKey *btcec.PublicKey, msg []byte) (*btcec.Signature, error) {
 			return testSig, nil
 		},
-		SendAnnouncement: func(msg lnwire.Message) chan error {
+		SendAnnouncement: func(msg lnwire.Message,
+			_ ...discovery.OptionalMsgField) chan error {
+
 			errChan := make(chan error, 1)
 			select {
 			case sentAnnouncements <- msg:
@@ -340,7 +348,7 @@ func createTestFundingManager(t *testing.T, privKey *btcec.PrivateKey,
 			return lnwire.NewMSatFromSatoshis(chanAmt) - reserve
 		},
 		RequiredRemoteMaxHTLCs: func(chanAmt btcutil.Amount) uint16 {
-			return uint16(lnwallet.MaxHTLCNumber / 2)
+			return uint16(input.MaxHTLCNumber / 2)
 		},
 		WatchNewChannel: func(*channeldb.OpenChannel, *btcec.PublicKey) error {
 			return nil
@@ -352,8 +360,9 @@ func createTestFundingManager(t *testing.T, privKey *btcec.PrivateKey,
 			publTxChan <- txn
 			return nil
 		},
-		ZombieSweeperInterval: 1 * time.Hour,
-		ReservationTimeout:    1 * time.Nanosecond,
+		ZombieSweeperInterval:  1 * time.Hour,
+		ReservationTimeout:     1 * time.Nanosecond,
+		NotifyOpenChannelEvent: func(wire.OutPoint) {},
 	})
 	if err != nil {
 		t.Fatalf("failed creating fundingManager: %v", err)
@@ -407,7 +416,9 @@ func recreateAliceFundingManager(t *testing.T, alice *testNode) {
 			msg []byte) (*btcec.Signature, error) {
 			return testSig, nil
 		},
-		SendAnnouncement: func(msg lnwire.Message) chan error {
+		SendAnnouncement: func(msg lnwire.Message,
+			_ ...discovery.OptionalMsgField) chan error {
+
 			errChan := make(chan error, 1)
 			select {
 			case aliceAnnounceChan <- msg:
@@ -1162,13 +1173,13 @@ func TestFundingManagerRestartBehavior(t *testing.T) {
 	recreateAliceFundingManager(t, alice)
 
 	// Intentionally make the channel announcements fail
-	alice.fundingMgr.cfg.SendAnnouncement =
-		func(msg lnwire.Message) chan error {
-			errChan := make(chan error, 1)
-			errChan <- fmt.Errorf("intentional error in " +
-				"SendAnnouncement")
-			return errChan
-		}
+	alice.fundingMgr.cfg.SendAnnouncement = func(msg lnwire.Message,
+		_ ...discovery.OptionalMsgField) chan error {
+
+		errChan := make(chan error, 1)
+		errChan <- fmt.Errorf("intentional error in SendAnnouncement")
+		return errChan
+	}
 
 	fundingLockedAlice := assertFundingMsgSent(
 		t, alice.msgChan, "FundingLocked",
@@ -2655,71 +2666,5 @@ func TestFundingManagerMaxConfs(t *testing.T) {
 	if !strings.Contains(string(err.Data), "minimum depth") {
 		t.Fatalf("expected ErrNumConfsTooLarge, got \"%v\"",
 			string(err.Data))
-	}
-}
-
-// TestFundingManagerRejectInvalidMaxValueInFlight makes sure that the funding
-// manager will act accordingly when the remote is requiring us to use a
-// max_value_in_flight larger than the channel capacity.
-func TestFundingManagerRejectInvalidMaxValueInFlight(t *testing.T) {
-	alice, bob := setupFundingManagers(t, defaultMaxPendingChannels)
-	defer tearDownFundingManagers(t, alice, bob)
-
-	localAmt := btcutil.Amount(500000)
-	pushAmt := btcutil.Amount(0)
-	capacity := localAmt + pushAmt
-
-	// Make Alice require a max_htlc_value_in_flight greater than the
-	// channel capacity.
-	alice.fundingMgr.cfg.RequiredRemoteMaxValue = func(
-		_ btcutil.Amount) lnwire.MilliSatoshi {
-		return lnwire.NewMSatFromSatoshis(capacity) + 100
-	}
-
-	// Create a funding request and start the workflow.
-	updateChan := make(chan *lnrpc.OpenStatusUpdate)
-	errChan := make(chan error, 1)
-	initReq := &openChanReq{
-		targetPubkey:    bob.privKey.PubKey(),
-		chainHash:       *activeNetParams.GenesisHash,
-		localFundingAmt: 500000,
-		pushAmt:         lnwire.NewMSatFromSatoshis(10),
-		private:         true,
-		updates:         updateChan,
-		err:             errChan,
-	}
-
-	alice.fundingMgr.initFundingWorkflow(bob, initReq)
-
-	// Alice should have sent the OpenChannel message to Bob.
-	var aliceMsg lnwire.Message
-	select {
-	case aliceMsg = <-alice.msgChan:
-	case err := <-initReq.err:
-		t.Fatalf("error init funding workflow: %v", err)
-	case <-time.After(time.Second * 5):
-		t.Fatalf("alice did not send OpenChannel message")
-	}
-
-	openChannelReq, ok := aliceMsg.(*lnwire.OpenChannel)
-	if !ok {
-		errorMsg, gotError := aliceMsg.(*lnwire.Error)
-		if gotError {
-			t.Fatalf("expected OpenChannel to be sent "+
-				"from bob, instead got error: %v",
-				lnwire.ErrorCode(errorMsg.Data[0]))
-		}
-		t.Fatalf("expected OpenChannel to be sent from "+
-			"alice, instead got %T", aliceMsg)
-	}
-
-	// Let Bob handle the init message.
-	bob.fundingMgr.processFundingOpen(openChannelReq, alice)
-
-	// Assert Bob responded with an ErrMaxValueInFlightTooLarge error.
-	err := assertFundingMsgSent(t, bob.msgChan, "Error").(*lnwire.Error)
-	if !strings.Contains(string(err.Data), "maxValueInFlight too large") {
-		t.Fatalf("expected ErrMaxValueInFlightTooLarge error, "+
-			"got \"%v\"", string(err.Data))
 	}
 }

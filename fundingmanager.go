@@ -17,7 +17,9 @@ import (
 	"github.com/go-errors/errors"
 	"github.com/lightningnetwork/lnd/chainntnfs"
 	"github.com/lightningnetwork/lnd/channeldb"
+	"github.com/lightningnetwork/lnd/discovery"
 	"github.com/lightningnetwork/lnd/htlcswitch"
+	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/keychain"
 	"github.com/lightningnetwork/lnd/lnpeer"
 	"github.com/lightningnetwork/lnd/lnrpc"
@@ -252,10 +254,13 @@ type fundingConfig struct {
 	// announcement from the backing Lightning Network node.
 	CurrentNodeAnnouncement func() (lnwire.NodeAnnouncement, error)
 
-	// SendAnnouncement is used by the FundingManager to send
-	// announcement messages to the Gossiper to possibly broadcast
-	// to the greater network.
-	SendAnnouncement func(msg lnwire.Message) chan error
+	// SendAnnouncement is used by the FundingManager to send announcement
+	// messages to the Gossiper to possibly broadcast to the greater
+	// network. A set of optional message fields can be provided to populate
+	// any information within the graph that is not included in the gossip
+	// message.
+	SendAnnouncement func(msg lnwire.Message,
+		optionalFields ...discovery.OptionalMsgField) chan error
 
 	// NotifyWhenOnline allows the FundingManager to register with a
 	// subsystem that will notify it when the peer comes online. This is
@@ -332,6 +337,10 @@ type fundingConfig struct {
 	// flood us with very small channels that would never really be usable
 	// due to fees.
 	MinChanSize btcutil.Amount
+
+	// NotifyOpenChannelEvent informs the ChannelNotifier when channels
+	// transition from pending open to open.
+	NotifyOpenChannelEvent func(wire.OutPoint)
 }
 
 // fundingManager acts as an orchestrator/bridge between the wallet's
@@ -503,7 +512,7 @@ func (f *fundingManager) Start() error {
 			channel.IsInitiator {
 
 			err := f.cfg.PublishTransaction(channel.FundingTxn)
-			if err != nil && err != lnwallet.ErrDoubleSpend {
+			if err != nil {
 				fndgLog.Errorf("Unable to rebroadcast funding "+
 					"tx for ChannelPoint(%v): %v",
 					channel.FundingOutpoint, err)
@@ -1090,7 +1099,7 @@ func (f *fundingManager) handleFundingOpen(fmsg *fundingOpenMsg) {
 		MaxAcceptedHtlcs: msg.MaxAcceptedHTLCs,
 		CsvDelay:         msg.CsvDelay,
 	}
-	err = reservation.CommitConstraints(channelConstraints, amt)
+	err = reservation.CommitConstraints(channelConstraints)
 	if err != nil {
 		fndgLog.Errorf("Unacceptable channel constraints: %v", err)
 		f.failFundingFlow(fmsg.peer, fmsg.msg.PendingChannelID, err)
@@ -1254,9 +1263,7 @@ func (f *fundingManager) handleFundingAccept(fmsg *fundingAcceptMsg) {
 		MaxAcceptedHtlcs: msg.MaxAcceptedHTLCs,
 		CsvDelay:         msg.CsvDelay,
 	}
-	err = resCtx.reservation.CommitConstraints(
-		channelConstraints, resCtx.chanAmt,
-	)
+	err = resCtx.reservation.CommitConstraints(channelConstraints)
 	if err != nil {
 		fndgLog.Warnf("Unacceptable channel constraints: %v", err)
 		f.failFundingFlow(fmsg.peer, fmsg.msg.PendingChannelID, err)
@@ -1849,12 +1856,12 @@ func makeFundingScript(channel *channeldb.OpenChannel) ([]byte, error) {
 	localKey := channel.LocalChanCfg.MultiSigKey.PubKey.SerializeCompressed()
 	remoteKey := channel.RemoteChanCfg.MultiSigKey.PubKey.SerializeCompressed()
 
-	multiSigScript, err := lnwallet.GenMultiSigScript(localKey, remoteKey)
+	multiSigScript, err := input.GenMultiSigScript(localKey, remoteKey)
 	if err != nil {
 		return nil, err
 	}
 
-	return lnwallet.WitnessScriptHash(multiSigScript)
+	return input.WitnessScriptHash(multiSigScript)
 }
 
 // waitForFundingConfirmation handles the final stages of the channel funding
@@ -1939,6 +1946,10 @@ func (f *fundingManager) waitForFundingConfirmation(completeChan *channeldb.Open
 			"%v", err)
 		return
 	}
+
+	// Inform the ChannelNotifier that the channel has transitioned from
+	// pending open to open.
+	f.cfg.NotifyOpenChannelEvent(completeChan.FundingOutpoint)
 
 	// TODO(roasbeef): ideally persistent state update for chan above
 	// should be abstracted
@@ -2113,10 +2124,12 @@ func (f *fundingManager) addToRouterGraph(completeChan *channeldb.OpenChannel,
 
 	// We'll obtain the max HTLC value we can forward in our direction, as
 	// we'll use this value within our ChannelUpdate. This value must be <=
-	// channel capacity and <= the maximum in-flight msats set by the peer, so
-	// we default to max in-flight msats as this value will always be <=
-	// channel capacity.
+	// channel capacity and <= the maximum in-flight msats set by the peer.
 	fwdMaxHTLC := completeChan.LocalChanCfg.MaxPendingAmount
+	capacityMSat := lnwire.NewMSatFromSatoshis(completeChan.Capacity)
+	if fwdMaxHTLC > capacityMSat {
+		fwdMaxHTLC = capacityMSat
+	}
 
 	ann, err := f.newChanAnnouncement(
 		f.cfg.IDKey, completeChan.IdentityPub,
@@ -2131,7 +2144,10 @@ func (f *fundingManager) addToRouterGraph(completeChan *channeldb.OpenChannel,
 
 	// Send ChannelAnnouncement and ChannelUpdate to the gossiper to add
 	// to the Router's topology.
-	errChan := f.cfg.SendAnnouncement(ann.chanAnn)
+	errChan := f.cfg.SendAnnouncement(
+		ann.chanAnn, discovery.ChannelCapacity(completeChan.Capacity),
+		discovery.ChannelPoint(completeChan.FundingOutpoint),
+	)
 	select {
 	case err := <-errChan:
 		if err != nil {
@@ -2278,7 +2294,7 @@ func (f *fundingManager) annAfterSixConfs(completeChan *channeldb.OpenChannel,
 		chanID := lnwire.NewChanIDFromOutPoint(&fundingPoint)
 
 		fndgLog.Infof("Announcing ChannelPoint(%v), short_chan_id=%v",
-			&fundingPoint, spew.Sdump(shortChanID))
+			&fundingPoint, shortChanID)
 
 		// We'll obtain the min HTLC value we can forward in our
 		// direction, as we'll use this value within our ChannelUpdate.
@@ -2287,12 +2303,15 @@ func (f *fundingManager) annAfterSixConfs(completeChan *channeldb.OpenChannel,
 		// HTLC it deems economically relevant.
 		fwdMinHTLC := completeChan.LocalChanCfg.MinHTLC
 
-		// We'll obtain the max HTLC value we can forward in our direction, as
-		// we'll use this value within our ChannelUpdate. This value must be <=
-		// channel capacity and <= the maximum in-flight msats set by the peer,
-		// so we default to max in-flight msats as this value will always be <=
-		// channel capacity.
+		// We'll obtain the max HTLC value we can forward in our
+		// direction, as we'll use this value within our ChannelUpdate.
+		// This value must be <= channel capacity and <= the maximum
+		// in-flight msats set by the peer.
 		fwdMaxHTLC := completeChan.LocalChanCfg.MaxPendingAmount
+		capacityMSat := lnwire.NewMSatFromSatoshis(completeChan.Capacity)
+		if fwdMaxHTLC > capacityMSat {
+			fwdMaxHTLC = capacityMSat
+		}
 
 		// Create and broadcast the proofs required to make this channel
 		// public and usable for other nodes for routing.
@@ -2307,7 +2326,7 @@ func (f *fundingManager) annAfterSixConfs(completeChan *channeldb.OpenChannel,
 		}
 
 		fndgLog.Debugf("Channel with ChannelPoint(%v), short_chan_id=%v "+
-			"announced", &fundingPoint, spew.Sdump(shortChanID))
+			"announced", &fundingPoint, shortChanID)
 	}
 
 	// We delete the channel opening state from our internal database

@@ -4,12 +4,20 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/lightningnetwork/lnd/autopilot"
+	"github.com/lightningnetwork/lnd/channeldb"
+	"github.com/lightningnetwork/lnd/htlcswitch"
+	"github.com/lightningnetwork/lnd/invoices"
 	"github.com/lightningnetwork/lnd/lnrpc/autopilotrpc"
 	"github.com/lightningnetwork/lnd/lnrpc/chainrpc"
+	"github.com/lightningnetwork/lnd/lnrpc/invoicesrpc"
+	"github.com/lightningnetwork/lnd/lnrpc/routerrpc"
 	"github.com/lightningnetwork/lnd/lnrpc/signrpc"
 	"github.com/lightningnetwork/lnd/lnrpc/walletrpc"
 	"github.com/lightningnetwork/lnd/macaroons"
+	"github.com/lightningnetwork/lnd/netann"
+	"github.com/lightningnetwork/lnd/routing"
 )
 
 // subRPCServerConfigs is special sub-config in the main configuration that
@@ -37,6 +45,16 @@ type subRPCServerConfigs struct {
 	// client to be notified of certain on-chain events (new blocks,
 	// confirmations, spends).
 	ChainRPC *chainrpc.Config `group:"chainrpc" namespace:"chainrpc"`
+
+	// InvoicesRPC is a sub-RPC server that exposes invoice related methods
+	// as a gRPC service.
+	InvoicesRPC *invoicesrpc.Config `group:"invoicesrpc" namespace:"invoicesrpc"`
+
+	// RouterRPC is a sub-RPC server the exposes functionality that allows
+	// clients to send payments on the network, and perform Lightning
+	// payment related queries such as requests for estimates of off-chain
+	// fees.
+	RouterRPC *routerrpc.Config `group:"routerrpc" namespace:"routerrpc"`
 }
 
 // PopulateDependencies attempts to iterate through all the sub-server configs
@@ -47,7 +65,14 @@ type subRPCServerConfigs struct {
 // FetchConfig method.
 func (s *subRPCServerConfigs) PopulateDependencies(cc *chainControl,
 	networkDir string, macService *macaroons.Service,
-	atpl *autopilot.Manager) error {
+	atpl *autopilot.Manager,
+	invoiceRegistry *invoices.InvoiceRegistry,
+	htlcSwitch *htlcswitch.Switch,
+	activeNetParams *chaincfg.Params,
+	chanRouter *routing.ChannelRouter,
+	routerBackend *routerrpc.RouterBackend,
+	nodeSigner *netann.NodeSigner,
+	chanDB *channeldb.DB) error {
 
 	// First, we'll use reflect to obtain a version of the config struct
 	// that allows us to programmatically inspect its fields.
@@ -72,9 +97,9 @@ func (s *subRPCServerConfigs) PopulateDependencies(cc *chainControl,
 			continue
 		}
 
-		switch cfg := field.Interface().(type) {
+		switch subCfg := field.Interface().(type) {
 		case *signrpc.Config:
-			subCfgValue := extractReflectValue(cfg)
+			subCfgValue := extractReflectValue(subCfg)
 
 			subCfgValue.FieldByName("MacService").Set(
 				reflect.ValueOf(macService),
@@ -87,7 +112,7 @@ func (s *subRPCServerConfigs) PopulateDependencies(cc *chainControl,
 			)
 
 		case *walletrpc.Config:
-			subCfgValue := extractReflectValue(cfg)
+			subCfgValue := extractReflectValue(subCfg)
 
 			subCfgValue.FieldByName("NetworkDir").Set(
 				reflect.ValueOf(networkDir),
@@ -106,14 +131,14 @@ func (s *subRPCServerConfigs) PopulateDependencies(cc *chainControl,
 			)
 
 		case *autopilotrpc.Config:
-			subCfgValue := extractReflectValue(cfg)
+			subCfgValue := extractReflectValue(subCfg)
 
 			subCfgValue.FieldByName("Manager").Set(
 				reflect.ValueOf(atpl),
 			)
 
 		case *chainrpc.Config:
-			subCfgValue := extractReflectValue(cfg)
+			subCfgValue := extractReflectValue(subCfg)
 
 			subCfgValue.FieldByName("NetworkDir").Set(
 				reflect.ValueOf(networkDir),
@@ -123,6 +148,60 @@ func (s *subRPCServerConfigs) PopulateDependencies(cc *chainControl,
 			)
 			subCfgValue.FieldByName("ChainNotifier").Set(
 				reflect.ValueOf(cc.chainNotifier),
+			)
+
+		case *invoicesrpc.Config:
+			subCfgValue := extractReflectValue(subCfg)
+
+			subCfgValue.FieldByName("NetworkDir").Set(
+				reflect.ValueOf(networkDir),
+			)
+			subCfgValue.FieldByName("MacService").Set(
+				reflect.ValueOf(macService),
+			)
+			subCfgValue.FieldByName("InvoiceRegistry").Set(
+				reflect.ValueOf(invoiceRegistry),
+			)
+			subCfgValue.FieldByName("IsChannelActive").Set(
+				reflect.ValueOf(htlcSwitch.HasActiveLink),
+			)
+			subCfgValue.FieldByName("ChainParams").Set(
+				reflect.ValueOf(activeNetParams),
+			)
+			subCfgValue.FieldByName("NodeSigner").Set(
+				reflect.ValueOf(nodeSigner),
+			)
+			subCfgValue.FieldByName("MaxPaymentMSat").Set(
+				reflect.ValueOf(maxPaymentMSat),
+			)
+			defaultDelta := cfg.Bitcoin.TimeLockDelta
+			if registeredChains.PrimaryChain() == litecoinChain {
+				defaultDelta = cfg.Litecoin.TimeLockDelta
+			}
+			subCfgValue.FieldByName("DefaultCLTVExpiry").Set(
+				reflect.ValueOf(defaultDelta),
+			)
+			subCfgValue.FieldByName("ChanDB").Set(
+				reflect.ValueOf(chanDB),
+			)
+
+		case *routerrpc.Config:
+			subCfgValue := extractReflectValue(subCfg)
+
+			subCfgValue.FieldByName("NetworkDir").Set(
+				reflect.ValueOf(networkDir),
+			)
+			subCfgValue.FieldByName("ActiveNetParams").Set(
+				reflect.ValueOf(activeNetParams),
+			)
+			subCfgValue.FieldByName("MacService").Set(
+				reflect.ValueOf(macService),
+			)
+			subCfgValue.FieldByName("Router").Set(
+				reflect.ValueOf(chanRouter),
+			)
+			subCfgValue.FieldByName("RouterBackend").Set(
+				reflect.ValueOf(routerBackend),
 			)
 
 		default:

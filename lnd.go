@@ -38,6 +38,7 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcwallet/wallet"
 	proxy "github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/lightninglabs/neutrino"
 
 	"github.com/lightningnetwork/lnd/autopilot"
 	"github.com/lightningnetwork/lnd/build"
@@ -119,7 +120,7 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	case cfg.Bitcoin.MainNet || cfg.Litecoin.MainNet:
 		network = "mainnet"
 
-	case cfg.Bitcoin.SimNet:
+	case cfg.Bitcoin.SimNet || cfg.Litecoin.SimNet:
 		network = "simnet"
 
 	case cfg.Bitcoin.RegTest:
@@ -161,7 +162,11 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 
 	// Open the channeldb, which is dedicated to storing channel, and
 	// network related metadata.
-	chanDB, err := channeldb.Open(graphDir)
+	chanDB, err := channeldb.Open(
+		graphDir,
+		channeldb.OptionSetRejectCacheSize(cfg.Caches.RejectCacheSize),
+		channeldb.OptionSetChannelCacheSize(cfg.Caches.ChannelCacheSize),
+	)
 	if err != nil {
 		ltndLog.Errorf("unable to open channeldb: %v", err)
 		return err
@@ -173,60 +178,66 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	// Ensure we create TLS key and certificate if they don't exist
-	if !fileExists(cfg.TLSCertPath) && !fileExists(cfg.TLSKeyPath) {
-		if err := genCertPair(cfg.TLSCertPath, cfg.TLSKeyPath); err != nil {
+	tlsCfg, restCreds, restProxyDest, err := getTLSConfig(cfg)
+	if err != nil {
+		return err
+	}
+
+	serverCreds := credentials.NewTLS(tlsCfg)
+	serverOpts := []grpc.ServerOption{grpc.Creds(serverCreds)}
+
+	restDialOpts := []grpc.DialOption{grpc.WithTransportCredentials(*restCreds)}
+
+	// Before starting the wallet, we'll create and start our Neutrino
+	// light client instance, if enabled, in order to allow it to sync
+	// while the rest of the daemon continues startup.
+	mainChain := cfg.Bitcoin
+	if registeredChains.PrimaryChain() == litecoinChain {
+		mainChain = cfg.Litecoin
+	}
+	var neutrinoCS *neutrino.ChainService
+	if mainChain.Node == "neutrino" {
+		neutrinoBackend, neutrinoCleanUp, err := initNeutrinoBackend(
+			mainChain.ChainDir,
+		)
+		defer neutrinoCleanUp()
+		if err != nil {
 			return err
 		}
+		neutrinoCS = neutrinoBackend
 	}
-
-	cert, err := tls.LoadX509KeyPair(cfg.TLSCertPath, cfg.TLSKeyPath)
-	if err != nil {
-		return err
-	}
-	tlsConf := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-		CipherSuites: tlsCipherSuites,
-		MinVersion:   tls.VersionTLS12,
-	}
-	sCreds := credentials.NewTLS(tlsConf)
-	serverOpts := []grpc.ServerOption{grpc.Creds(sCreds)}
-	cCreds, err := credentials.NewClientTLSFromFile(cfg.TLSCertPath, "")
-	if err != nil {
-		return err
-	}
-	proxyOpts := []grpc.DialOption{grpc.WithTransportCredentials(cCreds)}
 
 	var (
-		privateWalletPw = lnwallet.DefaultPrivatePassphrase
-		publicWalletPw  = lnwallet.DefaultPublicPassphrase
-		birthday        = time.Now()
-		recoveryWindow  uint32
-		unlockedWallet  *wallet.Wallet
+		walletInitParams WalletUnlockParams
+		privateWalletPw  = lnwallet.DefaultPrivatePassphrase
+		publicWalletPw   = lnwallet.DefaultPublicPassphrase
 	)
+
+	// If the user didn't request a seed, then we'll manually assume a
+	// wallet birthday of now, as otherwise the seed would've specified
+	// this information.
+	walletInitParams.Birthday = time.Now()
 
 	// We wait until the user provides a password over RPC. In case lnd is
 	// started with the --noseedbackup flag, we use the default password
 	// for wallet encryption.
 	if !cfg.NoSeedBackup {
-		walletInitParams, err := waitForWalletPassword(
+		params, err := waitForWalletPassword(
 			cfg.RPCListeners, cfg.RESTListeners, serverOpts,
-			proxyOpts, tlsConf, walletUnlockLis,
+			restDialOpts, restProxyDest, tlsCfg, walletUnlockLis,
 		)
 		if err != nil {
 			return err
 		}
 
+		walletInitParams = *params
 		privateWalletPw = walletInitParams.Password
 		publicWalletPw = walletInitParams.Password
-		birthday = walletInitParams.Birthday
-		recoveryWindow = walletInitParams.RecoveryWindow
-		unlockedWallet = walletInitParams.Wallet
 
-		if recoveryWindow > 0 {
+		if walletInitParams.RecoveryWindow > 0 {
 			ltndLog.Infof("Wallet recovery mode enabled with "+
 				"address lookahead of %d addresses",
-				recoveryWindow)
+				walletInitParams.RecoveryWindow)
 		}
 	}
 
@@ -245,7 +256,7 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 		// Try to unlock the macaroon store with the private password.
 		err = macaroonService.CreateUnlock(&privateWalletPw)
 		if err != nil {
-			srvrLog.Error(err)
+			srvrLog.Errorf("unable to unlock macaroons: %v", err)
 			return err
 		}
 
@@ -268,16 +279,14 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	// With the information parsed from the configuration, create valid
 	// instances of the pertinent interfaces required to operate the
 	// Lightning Network Daemon.
-	activeChainControl, chainCleanUp, err := newChainControlFromConfig(
-		cfg, chanDB, privateWalletPw, publicWalletPw, birthday,
-		recoveryWindow, unlockedWallet,
+	activeChainControl, err := newChainControlFromConfig(
+		cfg, chanDB, privateWalletPw, publicWalletPw,
+		walletInitParams.Birthday, walletInitParams.RecoveryWindow,
+		walletInitParams.Wallet, neutrinoCS,
 	)
 	if err != nil {
 		fmt.Printf("unable to create chain control: %v\n", err)
 		return err
-	}
-	if chainCleanUp != nil {
-		defer chainCleanUp()
 	}
 
 	// Finally before we start the server, we'll register the "holy
@@ -308,6 +317,7 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	// connections.
 	server, err := newServer(
 		cfg.Listeners, chanDB, activeChainControl, idPrivKey,
+		walletInitParams.ChansToRestore,
 	)
 	if err != nil {
 		srvrLog.Errorf("unable to create server: %v\n", err)
@@ -338,7 +348,8 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	// exported by the rpcServer.
 	rpcServer, err := newRPCServer(lis,
 		server, macaroonService, cfg.SubRPCServers, serverOpts,
-		proxyOpts, atplManager, tlsConf,
+		restDialOpts, restProxyDest, atplManager, server.invoices,
+		tlsCfg,
 	)
 	if err != nil {
 		srvrLog.Errorf("unable to start RPC server: %v", err)
@@ -411,6 +422,51 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	// the interrupt handler.
 	<-signal.ShutdownChannel()
 	return nil
+}
+
+// getTLSConfig returns a TLS configuration for the gRPC server and credentials
+// and a proxy destination for the REST reverse proxy.
+func getTLSConfig(cfg *config) (*tls.Config, *credentials.TransportCredentials,
+	string, error) {
+
+	// Ensure we create TLS key and certificate if they don't exist
+	if !fileExists(cfg.TLSCertPath) && !fileExists(cfg.TLSKeyPath) {
+		err := genCertPair(cfg.TLSCertPath, cfg.TLSKeyPath)
+		if err != nil {
+			return nil, nil, "", err
+		}
+	}
+
+	cert, err := tls.LoadX509KeyPair(cfg.TLSCertPath, cfg.TLSKeyPath)
+	if err != nil {
+		return nil, nil, "", err
+	}
+
+	tlsCfg := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+		CipherSuites: tlsCipherSuites,
+		MinVersion:   tls.VersionTLS12,
+	}
+
+	restCreds, err := credentials.NewClientTLSFromFile(cfg.TLSCertPath, "")
+	if err != nil {
+		return nil, nil, "", err
+	}
+
+	restProxyDest := cfg.RPCListeners[0].String()
+	switch {
+	case strings.Contains(restProxyDest, "0.0.0.0"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "0.0.0.0", "127.0.0.1", 1,
+		)
+
+	case strings.Contains(restProxyDest, "[::]"):
+		restProxyDest = strings.Replace(
+			restProxyDest, "[::]", "[::1]", 1,
+		)
+	}
+
+	return tlsCfg, &restCreds, restProxyDest, nil
 }
 
 // fileExists reports whether the named file or directory exists.
@@ -643,14 +699,18 @@ type WalletUnlockParams struct {
 	// later when lnd actually uses it). Because unlocking involves scrypt
 	// which is resource intensive, we want to avoid doing it twice.
 	Wallet *wallet.Wallet
+
+	// ChansToRestore a set of static channel backups that should be
+	// restored before the main server instance starts up.
+	ChansToRestore walletunlocker.ChannelsToRecover
 }
 
 // waitForWalletPassword will spin up gRPC and REST endpoints for the
 // WalletUnlocker server, and block until a password is provided by
 // the user to this RPC server.
 func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
-	serverOpts []grpc.ServerOption, proxyOpts []grpc.DialOption,
-	tlsConf *tls.Config, lis net.Listener) (*WalletUnlockParams, error) {
+	serverOpts []grpc.ServerOption, restDialOpts []grpc.DialOption,
+	restProxyDest string, tlsConf *tls.Config, lis net.Listener) (*WalletUnlockParams, error) {
 
 	// Set up a new PasswordService, which will listen for passwords
 	// provided over RPC.
@@ -690,7 +750,6 @@ func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
 			grpcServer.Serve(lis)
 		}()
 	} else {
-
 		for _, grpcEndpoint := range grpcEndpoints {
 			// Start a gRPC server listening for HTTP/2 connections, solely
 			// used for getting the encryption password from the client.
@@ -723,7 +782,7 @@ func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
 		mux := proxy.NewServeMux()
 
 		err := lnrpc.RegisterWalletUnlockerHandlerFromEndpoint(
-			ctx, mux, grpcEndpoints[0].String(), proxyOpts,
+			ctx, mux, restProxyDest, restDialOpts,
 		)
 		if err != nil {
 			return nil, err
@@ -810,24 +869,23 @@ func waitForWalletPassword(grpcEndpoints, restEndpoints []net.Addr,
 			return nil, err
 		}
 
-		walletInitParams := &WalletUnlockParams{
+		return &WalletUnlockParams{
 			Password:       password,
 			Birthday:       birthday,
 			RecoveryWindow: recoveryWindow,
 			Wallet:         newWallet,
-		}
-
-		return walletInitParams, nil
+			ChansToRestore: initMsg.ChanBackups,
+		}, nil
 
 	// The wallet has already been created in the past, and is simply being
 	// unlocked. So we'll just return these passphrases.
 	case unlockMsg := <-pwService.UnlockMsgs:
-		walletInitParams := &WalletUnlockParams{
+		return &WalletUnlockParams{
 			Password:       unlockMsg.Passphrase,
 			RecoveryWindow: unlockMsg.RecoveryWindow,
 			Wallet:         unlockMsg.Wallet,
-		}
-		return walletInitParams, nil
+			ChansToRestore: unlockMsg.ChanBackups,
+		}, nil
 
 	case <-signal.ShutdownChannel():
 		return nil, fmt.Errorf("shutting down")

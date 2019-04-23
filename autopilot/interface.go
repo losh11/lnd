@@ -119,6 +119,9 @@ type AttachmentDirective struct {
 // the interface is to allow an auto-pilot agent to decide if it needs more
 // channels, and if so, which exact channels should be opened.
 type AttachmentHeuristic interface {
+	// Name returns the name of this heuristic.
+	Name() string
+
 	// NodeScores is a method that given the current channel graph and
 	// current set of local channels, scores the given nodes according to
 	// the preference of opening a channel of the given size with them. The
@@ -137,6 +140,43 @@ type AttachmentHeuristic interface {
 	NodeScores(g ChannelGraph, chans []Channel,
 		chanSize btcutil.Amount, nodes map[NodeID]struct{}) (
 		map[NodeID]*NodeScore, error)
+}
+
+// ScoreSettable is an interface that indicates that the scores returned by the
+// heuristic can be mutated by an external caller. The ExternalScoreAttachment
+// currently implements this interface, and so should any heuristic that is
+// using the ExternalScoreAttachment as a sub-heuristic, or keeps their own
+// internal list of mutable scores, to allow access to setting the internal
+// scores.
+type ScoreSettable interface {
+	// SetNodeScores is used to set the internal map from NodeIDs to
+	// scores. The passed scores must be in the range [0, 1.0]. The fist
+	// parameter is the name of the targeted heuristic, to allow
+	// recursively target specific sub-heuristics. The returned boolean
+	// indicates whether the targeted heuristic was found.
+	SetNodeScores(string, map[NodeID]float64) (bool, error)
+}
+
+var (
+	// availableHeuristics holds all heuristics possible to combine for use
+	// with the autopilot agent.
+	availableHeuristics = []AttachmentHeuristic{
+		NewPrefAttachment(),
+		NewExternalScoreAttachment(),
+	}
+
+	// AvailableHeuristics is a map that holds the name of available
+	// heuristics to the actual heuristic for easy lookup. It will be
+	// filled during init().
+	AvailableHeuristics = make(map[string]AttachmentHeuristic)
+)
+
+func init() {
+	// Fill the map from heuristic names to available heuristics for easy
+	// lookup.
+	for _, h := range availableHeuristics {
+		AvailableHeuristics[h.Name()] = h
+	}
 }
 
 // ChannelController is a simple interface that allows an auto-pilot agent to

@@ -16,6 +16,7 @@ import (
 	"github.com/btcsuite/btcutil"
 	"github.com/go-errors/errors"
 	"github.com/lightningnetwork/lnd/channeldb"
+	"github.com/lightningnetwork/lnd/input"
 	"github.com/lightningnetwork/lnd/lnwallet"
 	"github.com/lightningnetwork/lnd/lnwire"
 	"github.com/lightningnetwork/lnd/routing/chainview"
@@ -76,6 +77,7 @@ func randEdgePolicy(chanID *lnwire.ShortChannelID,
 		LastUpdate:                time.Unix(int64(prand.Int31()), 0),
 		TimeLockDelta:             uint16(prand.Int63()),
 		MinHTLC:                   lnwire.MilliSatoshi(prand.Int31()),
+		MaxHTLC:                   lnwire.MilliSatoshi(prand.Int31()),
 		FeeBaseMSat:               lnwire.MilliSatoshi(prand.Int31()),
 		FeeProportionalMillionths: lnwire.MilliSatoshi(prand.Int31()),
 		Node:                      node,
@@ -87,7 +89,7 @@ func createChannelEdge(ctx *testCtx, bitcoinKey1, bitcoinKey2 []byte,
 	*lnwire.ShortChannelID, error) {
 
 	fundingTx := wire.NewMsgTx(2)
-	_, tx, err := lnwallet.GenFundingPkScript(
+	_, tx, err := input.GenFundingPkScript(
 		bitcoinKey1,
 		bitcoinKey2,
 		int64(chanValue),
@@ -433,6 +435,11 @@ func TestEdgeUpdateNotification(t *testing.T) {
 			t.Fatalf("min HTLC of edge doesn't match: "+
 				"expected %v, got %v", edgeAnn.MinHTLC,
 				edgeUpdate.MinHTLC)
+		}
+		if edgeUpdate.MaxHTLC != edgeAnn.MaxHTLC {
+			t.Fatalf("max HTLC of edge doesn't match: "+
+				"expected %v, got %v", edgeAnn.MaxHTLC,
+				edgeUpdate.MaxHTLC)
 		}
 		if edgeUpdate.BaseFee != edgeAnn.FeeBaseMSat {
 			t.Fatalf("base fee of edge doesn't match: "+
