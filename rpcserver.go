@@ -467,6 +467,7 @@ func newRPCServer(lis net.Listener, s *server, macService *macaroons.Service,
 
 	// Finally, with all the pre-set up complete,  we can create the main
 	// gRPC server, and register the main lnrpc server along side.
+	serverOpts = []grpc.ServerOption{}
 	grpcServer := grpc.NewServer(serverOpts...)
 	rootRPCServer := &rpcServer{
 		restServerOpts: restServerOpts,
