@@ -138,6 +138,33 @@ func GetTransactions(msg []byte, callback Callback) {
 	s.start(msg, callback)
 }
 
+// EstimateFee asks the chain backend to estimate the fee rate and total fees
+// for a transaction that pays to multiple specified outputs.
+//
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
+func EstimateFee(msg []byte, callback Callback) {
+	s := &syncHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.EstimateFeeRequest{}
+		},
+		getSync: func(ctx context.Context,
+			req proto.Message) (proto.Message, error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, err
+			}
+			defer close()
+
+			r := req.(*lnrpc.EstimateFeeRequest)
+			return client.EstimateFee(ctx, r)
+		},
+	}
+	s.start(msg, callback)
+}
+
 // SendCoins executes a request to send coins to a particular address. Unlike
 // SendMany, this RPC call only allows creating a single output at a time. If
 // neither target_conf, or sat_per_byte are set, then the internal wallet will
@@ -510,6 +537,44 @@ func ListChannels(msg []byte, callback Callback) {
 	s.start(msg, callback)
 }
 
+// SubscribeChannelEvents creates a uni-directional stream from the server to
+// the client in which any updates relevant to the state of the channels are
+// sent over. Events include new active channels, inactive channels, and closed
+// channels.
+//
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func SubscribeChannelEvents(msg []byte, rStream RecvStream) {
+	s := &readStreamHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.ChannelEventSubscription{}
+		},
+		recvStream: func(ctx context.Context,
+			req proto.Message) (*receiver, func(), error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, nil, err
+			}
+
+			r := req.(*lnrpc.ChannelEventSubscription)
+			stream, err := client.SubscribeChannelEvents(ctx, r)
+			if err != nil {
+				close()
+				return nil, nil, err
+			}
+			return &receiver{
+				recv: func() (proto.Message, error) {
+					return stream.Recv()
+				},
+			}, close, nil
+		},
+	}
+	s.start(msg, rStream)
+}
+
 // ClosedChannels returns a description of all the closed channels that
 // this node was a participant in.
 //
@@ -852,10 +917,8 @@ func AddInvoice(msg []byte, callback Callback) {
 // paginated responses, allowing users to query for specific invoices through
 // their add_index. This can be done by using either the first_index_offset or
 // last_index_offset fields included in the response as the index_offset of the
-// next request. The reversed flag is set by default in order to paginate
-// backwards. If you wish to paginate forwards, you must explicitly set the
-// flag to false. If none of the parameters are specified, then the last 100
-// invoices will be returned.
+// next request. By default, the first 100 invoices created will be returned.
+// Backwards pagination is also supported through the Reversed flag.
 //
 // NOTE: This method produces a single result or error, and the callback will
 // be called only once.
@@ -1327,7 +1390,7 @@ func UpdateChannelPolicy(msg []byte, callback Callback) {
 }
 
 // ForwardingHistory allows the caller to query the htlcswitch for a record of
-// all HTLC's forwarded within the target time range, and integer offset
+// all HTLCs forwarded within the target time range, and integer offset
 // within that time range. If no time-range is specified, then the first chunk
 // of the past 24 hrs of forwarding history are returned.
 // 
@@ -1359,4 +1422,163 @@ func ForwardingHistory(msg []byte, callback Callback) {
 		},
 	}
 	s.start(msg, callback)
+}
+
+// ExportChannelBackup attempts to return an encrypted static channel backup
+// for the target channel identified by it channel point. The backup is
+// encrypted with a key generated from the aezeed seed of the user. The
+// returned backup can either be restored using the RestoreChannelBackup
+// method once lnd is running, or via the InitWallet and UnlockWallet methods
+// from the WalletUnlocker service.
+//
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
+func ExportChannelBackup(msg []byte, callback Callback) {
+	s := &syncHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.ExportChannelBackupRequest{}
+		},
+		getSync: func(ctx context.Context,
+			req proto.Message) (proto.Message, error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, err
+			}
+			defer close()
+
+			r := req.(*lnrpc.ExportChannelBackupRequest)
+			return client.ExportChannelBackup(ctx, r)
+		},
+	}
+	s.start(msg, callback)
+}
+
+// ExportAllChannelBackups returns static channel backups for all existing
+// channels known to lnd. A set of regular singular static channel backups for
+// each channel are returned. Additionally, a multi-channel backup is returned
+// as well, which contains a single encrypted blob containing the backups of
+// each channel.
+//
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
+func ExportAllChannelBackups(msg []byte, callback Callback) {
+	s := &syncHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.ChanBackupExportRequest{}
+		},
+		getSync: func(ctx context.Context,
+			req proto.Message) (proto.Message, error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, err
+			}
+			defer close()
+
+			r := req.(*lnrpc.ChanBackupExportRequest)
+			return client.ExportAllChannelBackups(ctx, r)
+		},
+	}
+	s.start(msg, callback)
+}
+
+// VerifyChanBackup allows a caller to verify the integrity of a channel backup
+// snapshot. This method will accept either a packed Single or a packed Multi.
+// Specifying both will result in an error.
+//
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
+func VerifyChanBackup(msg []byte, callback Callback) {
+	s := &syncHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.ChanBackupSnapshot{}
+		},
+		getSync: func(ctx context.Context,
+			req proto.Message) (proto.Message, error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, err
+			}
+			defer close()
+
+			r := req.(*lnrpc.ChanBackupSnapshot)
+			return client.VerifyChanBackup(ctx, r)
+		},
+	}
+	s.start(msg, callback)
+}
+
+// RestoreChannelBackups accepts a set of singular channel backups, or a
+// single encrypted multi-chan backup and attempts to recover any funds
+// remaining within the channel. If we are able to unpack the backup, then the
+// new channel will be shown under listchannels, as well as pending channels.
+//
+// NOTE: This method produces a single result or error, and the callback will
+// be called only once.
+func RestoreChannelBackups(msg []byte, callback Callback) {
+	s := &syncHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.RestoreChanBackupRequest{}
+		},
+		getSync: func(ctx context.Context,
+			req proto.Message) (proto.Message, error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, err
+			}
+			defer close()
+
+			r := req.(*lnrpc.RestoreChanBackupRequest)
+			return client.RestoreChannelBackups(ctx, r)
+		},
+	}
+	s.start(msg, callback)
+}
+
+// SubscribeChannelBackups allows a client to sub-subscribe to the most up to
+// date information concerning the state of all channel backups. Each time a
+// new channel is added, we return the new set of channels, along with a
+// multi-chan backup containing the backup info for all channels. Each time a
+// channel is closed, we send a new update, which contains new new chan back
+// ups, but the updated set of encrypted multi-chan backups with the closed
+// channel(s) removed.
+//
+// NOTE: This method produces a stream of responses, and the receive stream can
+// be called zero or more times. After EOF error is returned, no more responses
+// will be produced.
+func SubscribeChannelBackups(msg []byte, rStream RecvStream) {
+	s := &readStreamHandler{
+		newProto: func() proto.Message {
+			return &lnrpc.ChannelBackupSubscription{}
+		},
+		recvStream: func(ctx context.Context,
+			req proto.Message) (*receiver, func(), error) {
+
+			// Get the gRPC client.
+			client, close, err := getLightningClient()
+			if err != nil {
+				return nil, nil, err
+			}
+
+			r := req.(*lnrpc.ChannelBackupSubscription)
+			stream, err := client.SubscribeChannelBackups(ctx, r)
+			if err != nil {
+				close()
+				return nil, nil, err
+			}
+			return &receiver{
+				recv: func() (proto.Message, error) {
+					return stream.Recv()
+				},
+			}, close, nil
+		},
+	}
+	s.start(msg, rStream)
 }
