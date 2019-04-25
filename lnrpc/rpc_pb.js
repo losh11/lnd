@@ -17,10 +17,15 @@ goog.exportSymbol('proto.lnrpc.AbandonChannelResponse', null, global);
 goog.exportSymbol('proto.lnrpc.AddInvoiceResponse', null, global);
 goog.exportSymbol('proto.lnrpc.AddressType', null, global);
 goog.exportSymbol('proto.lnrpc.Chain', null, global);
+goog.exportSymbol('proto.lnrpc.ChanBackupExportRequest', null, global);
+goog.exportSymbol('proto.lnrpc.ChanBackupSnapshot', null, global);
 goog.exportSymbol('proto.lnrpc.ChanInfoRequest', null, global);
 goog.exportSymbol('proto.lnrpc.ChangePasswordRequest', null, global);
 goog.exportSymbol('proto.lnrpc.ChangePasswordResponse', null, global);
 goog.exportSymbol('proto.lnrpc.Channel', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelBackup', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelBackupSubscription', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelBackups', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelBalanceRequest', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelBalanceResponse', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelCloseSummary', null, global);
@@ -28,6 +33,9 @@ goog.exportSymbol('proto.lnrpc.ChannelCloseSummary.ClosureType', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelCloseUpdate', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelEdge', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelEdgeUpdate', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelEventSubscription', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelEventUpdate', null, global);
+goog.exportSymbol('proto.lnrpc.ChannelEventUpdate.UpdateType', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelFeeReport', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelGraph', null, global);
 goog.exportSymbol('proto.lnrpc.ChannelGraphRequest', null, global);
@@ -47,6 +55,10 @@ goog.exportSymbol('proto.lnrpc.DeleteAllPaymentsRequest', null, global);
 goog.exportSymbol('proto.lnrpc.DeleteAllPaymentsResponse', null, global);
 goog.exportSymbol('proto.lnrpc.DisconnectPeerRequest', null, global);
 goog.exportSymbol('proto.lnrpc.DisconnectPeerResponse', null, global);
+goog.exportSymbol('proto.lnrpc.EdgeLocator', null, global);
+goog.exportSymbol('proto.lnrpc.EstimateFeeRequest', null, global);
+goog.exportSymbol('proto.lnrpc.EstimateFeeResponse', null, global);
+goog.exportSymbol('proto.lnrpc.ExportChannelBackupRequest', null, global);
 goog.exportSymbol('proto.lnrpc.FeeLimit', null, global);
 goog.exportSymbol('proto.lnrpc.FeeReportRequest', null, global);
 goog.exportSymbol('proto.lnrpc.FeeReportResponse', null, global);
@@ -80,6 +92,7 @@ goog.exportSymbol('proto.lnrpc.ListPeersRequest', null, global);
 goog.exportSymbol('proto.lnrpc.ListPeersResponse', null, global);
 goog.exportSymbol('proto.lnrpc.ListUnspentRequest', null, global);
 goog.exportSymbol('proto.lnrpc.ListUnspentResponse', null, global);
+goog.exportSymbol('proto.lnrpc.MultiChanBackup', null, global);
 goog.exportSymbol('proto.lnrpc.NetworkInfo', null, global);
 goog.exportSymbol('proto.lnrpc.NetworkInfoRequest', null, global);
 goog.exportSymbol('proto.lnrpc.NewAddressRequest', null, global);
@@ -90,11 +103,13 @@ goog.exportSymbol('proto.lnrpc.NodeInfoRequest', null, global);
 goog.exportSymbol('proto.lnrpc.NodeUpdate', null, global);
 goog.exportSymbol('proto.lnrpc.OpenChannelRequest', null, global);
 goog.exportSymbol('proto.lnrpc.OpenStatusUpdate', null, global);
+goog.exportSymbol('proto.lnrpc.OutPoint', null, global);
 goog.exportSymbol('proto.lnrpc.PayReq', null, global);
 goog.exportSymbol('proto.lnrpc.PayReqString', null, global);
 goog.exportSymbol('proto.lnrpc.Payment', null, global);
 goog.exportSymbol('proto.lnrpc.PaymentHash', null, global);
 goog.exportSymbol('proto.lnrpc.Peer', null, global);
+goog.exportSymbol('proto.lnrpc.Peer.SyncType', null, global);
 goog.exportSymbol('proto.lnrpc.PendingChannelsRequest', null, global);
 goog.exportSymbol('proto.lnrpc.PendingChannelsResponse', null, global);
 goog.exportSymbol('proto.lnrpc.PendingChannelsResponse.ClosedChannel', null, global);
@@ -108,6 +123,8 @@ goog.exportSymbol('proto.lnrpc.PolicyUpdateRequest', null, global);
 goog.exportSymbol('proto.lnrpc.PolicyUpdateResponse', null, global);
 goog.exportSymbol('proto.lnrpc.QueryRoutesRequest', null, global);
 goog.exportSymbol('proto.lnrpc.QueryRoutesResponse', null, global);
+goog.exportSymbol('proto.lnrpc.RestoreBackupResponse', null, global);
+goog.exportSymbol('proto.lnrpc.RestoreChanBackupRequest', null, global);
 goog.exportSymbol('proto.lnrpc.Route', null, global);
 goog.exportSymbol('proto.lnrpc.RouteHint', null, global);
 goog.exportSymbol('proto.lnrpc.RoutingPolicy', null, global);
@@ -127,6 +144,7 @@ goog.exportSymbol('proto.lnrpc.TransactionDetails', null, global);
 goog.exportSymbol('proto.lnrpc.UnlockWalletRequest', null, global);
 goog.exportSymbol('proto.lnrpc.UnlockWalletResponse', null, global);
 goog.exportSymbol('proto.lnrpc.Utxo', null, global);
+goog.exportSymbol('proto.lnrpc.VerifyChanBackupResponse', null, global);
 goog.exportSymbol('proto.lnrpc.VerifyMessageRequest', null, global);
 goog.exportSymbol('proto.lnrpc.VerifyMessageResponse', null, global);
 goog.exportSymbol('proto.lnrpc.WalletBalanceRequest', null, global);
@@ -619,7 +637,8 @@ proto.lnrpc.InitWalletRequest.toObject = function(includeInstance, msg) {
     walletPassword: msg.getWalletPassword_asB64(),
     cipherSeedMnemonicList: jspb.Message.getRepeatedField(msg, 2),
     aezeedPassphrase: msg.getAezeedPassphrase_asB64(),
-    recoveryWindow: jspb.Message.getFieldWithDefault(msg, 4, 0)
+    recoveryWindow: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    channelBackups: (f = msg.getChannelBackups()) && proto.lnrpc.ChanBackupSnapshot.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -671,6 +690,11 @@ proto.lnrpc.InitWalletRequest.deserializeBinaryFromReader = function(msg, reader
     case 4:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setRecoveryWindow(value);
+      break;
+    case 5:
+      var value = new proto.lnrpc.ChanBackupSnapshot;
+      reader.readMessage(value,proto.lnrpc.ChanBackupSnapshot.deserializeBinaryFromReader);
+      msg.setChannelBackups(value);
       break;
     default:
       reader.skipField();
@@ -727,6 +751,14 @@ proto.lnrpc.InitWalletRequest.serializeBinaryToWriter = function(message, writer
     writer.writeInt32(
       4,
       f
+    );
+  }
+  f = message.getChannelBackups();
+  if (f != null) {
+    writer.writeMessage(
+      5,
+      f,
+      proto.lnrpc.ChanBackupSnapshot.serializeBinaryToWriter
     );
   }
 };
@@ -851,6 +883,36 @@ proto.lnrpc.InitWalletRequest.prototype.getRecoveryWindow = function() {
 /** @param {number} value */
 proto.lnrpc.InitWalletRequest.prototype.setRecoveryWindow = function(value) {
   jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * optional ChanBackupSnapshot channel_backups = 5;
+ * @return {?proto.lnrpc.ChanBackupSnapshot}
+ */
+proto.lnrpc.InitWalletRequest.prototype.getChannelBackups = function() {
+  return /** @type{?proto.lnrpc.ChanBackupSnapshot} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChanBackupSnapshot, 5));
+};
+
+
+/** @param {?proto.lnrpc.ChanBackupSnapshot|undefined} value */
+proto.lnrpc.InitWalletRequest.prototype.setChannelBackups = function(value) {
+  jspb.Message.setWrapperField(this, 5, value);
+};
+
+
+proto.lnrpc.InitWalletRequest.prototype.clearChannelBackups = function() {
+  this.setChannelBackups(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.InitWalletRequest.prototype.hasChannelBackups = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -1018,7 +1080,8 @@ proto.lnrpc.UnlockWalletRequest.prototype.toObject = function(opt_includeInstanc
 proto.lnrpc.UnlockWalletRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     walletPassword: msg.getWalletPassword_asB64(),
-    recoveryWindow: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    recoveryWindow: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    channelBackups: (f = msg.getChannelBackups()) && proto.lnrpc.ChanBackupSnapshot.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -1063,6 +1126,11 @@ proto.lnrpc.UnlockWalletRequest.deserializeBinaryFromReader = function(msg, read
       var value = /** @type {number} */ (reader.readInt32());
       msg.setRecoveryWindow(value);
       break;
+    case 3:
+      var value = new proto.lnrpc.ChanBackupSnapshot;
+      reader.readMessage(value,proto.lnrpc.ChanBackupSnapshot.deserializeBinaryFromReader);
+      msg.setChannelBackups(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1104,6 +1172,14 @@ proto.lnrpc.UnlockWalletRequest.serializeBinaryToWriter = function(message, writ
     writer.writeInt32(
       2,
       f
+    );
+  }
+  f = message.getChannelBackups();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      proto.lnrpc.ChanBackupSnapshot.serializeBinaryToWriter
     );
   }
 };
@@ -1160,6 +1236,36 @@ proto.lnrpc.UnlockWalletRequest.prototype.getRecoveryWindow = function() {
 /** @param {number} value */
 proto.lnrpc.UnlockWalletRequest.prototype.setRecoveryWindow = function(value) {
   jspb.Message.setField(this, 2, value);
+};
+
+
+/**
+ * optional ChanBackupSnapshot channel_backups = 3;
+ * @return {?proto.lnrpc.ChanBackupSnapshot}
+ */
+proto.lnrpc.UnlockWalletRequest.prototype.getChannelBackups = function() {
+  return /** @type{?proto.lnrpc.ChanBackupSnapshot} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChanBackupSnapshot, 3));
+};
+
+
+/** @param {?proto.lnrpc.ChanBackupSnapshot|undefined} value */
+proto.lnrpc.UnlockWalletRequest.prototype.setChannelBackups = function(value) {
+  jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+proto.lnrpc.UnlockWalletRequest.prototype.clearChannelBackups = function() {
+  this.setChannelBackups(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.UnlockWalletRequest.prototype.hasChannelBackups = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1662,8 +1768,8 @@ proto.lnrpc.Utxo.toObject = function(includeInstance, msg) {
     type: jspb.Message.getFieldWithDefault(msg, 1, 0),
     address: jspb.Message.getFieldWithDefault(msg, 2, ""),
     amountSat: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    scriptPubkey: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    outpoint: (f = msg.getOutpoint()) && proto.lnrpc.ChannelPoint.toObject(includeInstance, f),
+    pkScript: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    outpoint: (f = msg.getOutpoint()) && proto.lnrpc.OutPoint.toObject(includeInstance, f),
     confirmations: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
@@ -1715,11 +1821,11 @@ proto.lnrpc.Utxo.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
-      msg.setScriptPubkey(value);
+      msg.setPkScript(value);
       break;
     case 5:
-      var value = new proto.lnrpc.ChannelPoint;
-      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      var value = new proto.lnrpc.OutPoint;
+      reader.readMessage(value,proto.lnrpc.OutPoint.deserializeBinaryFromReader);
       msg.setOutpoint(value);
       break;
     case 6:
@@ -1776,7 +1882,7 @@ proto.lnrpc.Utxo.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getScriptPubkey();
+  f = message.getPkScript();
   if (f.length > 0) {
     writer.writeString(
       4,
@@ -1788,7 +1894,7 @@ proto.lnrpc.Utxo.serializeBinaryToWriter = function(message, writer) {
     writer.writeMessage(
       5,
       f,
-      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+      proto.lnrpc.OutPoint.serializeBinaryToWriter
     );
   }
   f = message.getConfirmations();
@@ -1847,31 +1953,31 @@ proto.lnrpc.Utxo.prototype.setAmountSat = function(value) {
 
 
 /**
- * optional string script_pubkey = 4;
+ * optional string pk_script = 4;
  * @return {string}
  */
-proto.lnrpc.Utxo.prototype.getScriptPubkey = function() {
+proto.lnrpc.Utxo.prototype.getPkScript = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /** @param {string} value */
-proto.lnrpc.Utxo.prototype.setScriptPubkey = function(value) {
+proto.lnrpc.Utxo.prototype.setPkScript = function(value) {
   jspb.Message.setField(this, 4, value);
 };
 
 
 /**
- * optional ChannelPoint outpoint = 5;
- * @return {?proto.lnrpc.ChannelPoint}
+ * optional OutPoint outpoint = 5;
+ * @return {?proto.lnrpc.OutPoint}
  */
 proto.lnrpc.Utxo.prototype.getOutpoint = function() {
-  return /** @type{?proto.lnrpc.ChannelPoint} */ (
-    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelPoint, 5));
+  return /** @type{?proto.lnrpc.OutPoint} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.OutPoint, 5));
 };
 
 
-/** @param {?proto.lnrpc.ChannelPoint|undefined} value */
+/** @param {?proto.lnrpc.OutPoint|undefined} value */
 proto.lnrpc.Utxo.prototype.setOutpoint = function(value) {
   jspb.Message.setWrapperField(this, 5, value);
 };
@@ -2819,7 +2925,9 @@ proto.lnrpc.SendRequest.toObject = function(includeInstance, msg) {
     paymentHashString: jspb.Message.getFieldWithDefault(msg, 5, ""),
     paymentRequest: jspb.Message.getFieldWithDefault(msg, 6, ""),
     finalCltvDelta: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    feeLimit: (f = msg.getFeeLimit()) && proto.lnrpc.FeeLimit.toObject(includeInstance, f)
+    feeLimit: (f = msg.getFeeLimit()) && proto.lnrpc.FeeLimit.toObject(includeInstance, f),
+    outgoingChanId: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    cltvLimit: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -2888,6 +2996,14 @@ proto.lnrpc.SendRequest.deserializeBinaryFromReader = function(msg, reader) {
       var value = new proto.lnrpc.FeeLimit;
       reader.readMessage(value,proto.lnrpc.FeeLimit.deserializeBinaryFromReader);
       msg.setFeeLimit(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setOutgoingChanId(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setCltvLimit(value);
       break;
     default:
       reader.skipField();
@@ -2973,6 +3089,20 @@ proto.lnrpc.SendRequest.serializeBinaryToWriter = function(message, writer) {
       8,
       f,
       proto.lnrpc.FeeLimit.serializeBinaryToWriter
+    );
+  }
+  f = message.getOutgoingChanId();
+  if (f !== 0) {
+    writer.writeUint64(
+      9,
+      f
+    );
+  }
+  f = message.getCltvLimit();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
+      f
     );
   }
 };
@@ -3158,6 +3288,36 @@ proto.lnrpc.SendRequest.prototype.clearFeeLimit = function() {
  */
 proto.lnrpc.SendRequest.prototype.hasFeeLimit = function() {
   return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional uint64 outgoing_chan_id = 9;
+ * @return {number}
+ */
+proto.lnrpc.SendRequest.prototype.getOutgoingChanId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.SendRequest.prototype.setOutgoingChanId = function(value) {
+  jspb.Message.setField(this, 9, value);
+};
+
+
+/**
+ * optional uint32 cltv_limit = 10;
+ * @return {number}
+ */
+proto.lnrpc.SendRequest.prototype.getCltvLimit = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.SendRequest.prototype.setCltvLimit = function(value) {
+  jspb.Message.setField(this, 10, value);
 };
 
 
@@ -3506,7 +3666,8 @@ proto.lnrpc.SendToRouteRequest.toObject = function(includeInstance, msg) {
     paymentHash: msg.getPaymentHash_asB64(),
     paymentHashString: jspb.Message.getFieldWithDefault(msg, 2, ""),
     routesList: jspb.Message.toObjectList(msg.getRoutesList(),
-    proto.lnrpc.Route.toObject, includeInstance)
+    proto.lnrpc.Route.toObject, includeInstance),
+    route: (f = msg.getRoute()) && proto.lnrpc.Route.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -3556,6 +3717,11 @@ proto.lnrpc.SendToRouteRequest.deserializeBinaryFromReader = function(msg, reade
       reader.readMessage(value,proto.lnrpc.Route.deserializeBinaryFromReader);
       msg.addRoutes(value);
       break;
+    case 4:
+      var value = new proto.lnrpc.Route;
+      reader.readMessage(value,proto.lnrpc.Route.deserializeBinaryFromReader);
+      msg.setRoute(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3603,6 +3769,14 @@ proto.lnrpc.SendToRouteRequest.serializeBinaryToWriter = function(message, write
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       3,
+      f,
+      proto.lnrpc.Route.serializeBinaryToWriter
+    );
+  }
+  f = message.getRoute();
+  if (f != null) {
+    writer.writeMessage(
+      4,
       f,
       proto.lnrpc.Route.serializeBinaryToWriter
     );
@@ -3692,6 +3866,36 @@ proto.lnrpc.SendToRouteRequest.prototype.addRoutes = function(opt_value, opt_ind
 
 proto.lnrpc.SendToRouteRequest.prototype.clearRoutesList = function() {
   this.setRoutesList([]);
+};
+
+
+/**
+ * optional Route route = 4;
+ * @return {?proto.lnrpc.Route}
+ */
+proto.lnrpc.SendToRouteRequest.prototype.getRoute = function() {
+  return /** @type{?proto.lnrpc.Route} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.Route, 4));
+};
+
+
+/** @param {?proto.lnrpc.Route|undefined} value */
+proto.lnrpc.SendToRouteRequest.prototype.setRoute = function(value) {
+  jspb.Message.setWrapperField(this, 4, value);
+};
+
+
+proto.lnrpc.SendToRouteRequest.prototype.clearRoute = function() {
+  this.setRoute(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.SendToRouteRequest.prototype.hasRoute = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -3980,6 +4184,226 @@ proto.lnrpc.ChannelPoint.prototype.setOutputIndex = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
+proto.lnrpc.OutPoint = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.OutPoint, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.OutPoint.displayName = 'proto.lnrpc.OutPoint';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.OutPoint.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.OutPoint.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.OutPoint} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.OutPoint.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    txidBytes: msg.getTxidBytes_asB64(),
+    txidStr: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    outputIndex: jspb.Message.getFieldWithDefault(msg, 3, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.OutPoint}
+ */
+proto.lnrpc.OutPoint.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.OutPoint;
+  return proto.lnrpc.OutPoint.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.OutPoint} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.OutPoint}
+ */
+proto.lnrpc.OutPoint.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setTxidBytes(value);
+      break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTxidStr(value);
+      break;
+    case 3:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setOutputIndex(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.OutPoint.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.OutPoint.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.OutPoint} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.OutPoint.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getTxidBytes_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      1,
+      f
+    );
+  }
+  f = message.getTxidStr();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
+  f = message.getOutputIndex();
+  if (f !== 0) {
+    writer.writeUint32(
+      3,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional bytes txid_bytes = 1;
+ * @return {!(string|Uint8Array)}
+ */
+proto.lnrpc.OutPoint.prototype.getTxidBytes = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+};
+
+
+/**
+ * optional bytes txid_bytes = 1;
+ * This is a type-conversion wrapper around `getTxidBytes()`
+ * @return {string}
+ */
+proto.lnrpc.OutPoint.prototype.getTxidBytes_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getTxidBytes()));
+};
+
+
+/**
+ * optional bytes txid_bytes = 1;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getTxidBytes()`
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.OutPoint.prototype.getTxidBytes_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getTxidBytes()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.lnrpc.OutPoint.prototype.setTxidBytes = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional string txid_str = 2;
+ * @return {string}
+ */
+proto.lnrpc.OutPoint.prototype.getTxidStr = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/** @param {string} value */
+proto.lnrpc.OutPoint.prototype.setTxidStr = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+/**
+ * optional uint32 output_index = 3;
+ * @return {number}
+ */
+proto.lnrpc.OutPoint.prototype.getOutputIndex = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.OutPoint.prototype.setOutputIndex = function(value) {
+  jspb.Message.setField(this, 3, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
 proto.lnrpc.LightningAddress = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
@@ -4134,6 +4558,346 @@ proto.lnrpc.LightningAddress.prototype.getHost = function() {
 
 /** @param {string} value */
 proto.lnrpc.LightningAddress.prototype.setHost = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.EstimateFeeRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.EstimateFeeRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.EstimateFeeRequest.displayName = 'proto.lnrpc.EstimateFeeRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.EstimateFeeRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.EstimateFeeRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.EstimateFeeRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EstimateFeeRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    addrtoamountMap: (f = msg.getAddrtoamountMap()) ? f.toObject(includeInstance, undefined) : [],
+    targetConf: jspb.Message.getFieldWithDefault(msg, 2, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.EstimateFeeRequest}
+ */
+proto.lnrpc.EstimateFeeRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.EstimateFeeRequest;
+  return proto.lnrpc.EstimateFeeRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.EstimateFeeRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.EstimateFeeRequest}
+ */
+proto.lnrpc.EstimateFeeRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = msg.getAddrtoamountMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readInt64);
+         });
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setTargetConf(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.EstimateFeeRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.EstimateFeeRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.EstimateFeeRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EstimateFeeRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getAddrtoamountMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(1, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeInt64);
+  }
+  f = message.getTargetConf();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * map<string, int64> AddrToAmount = 1;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,number>}
+ */
+proto.lnrpc.EstimateFeeRequest.prototype.getAddrtoamountMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,number>} */ (
+      jspb.Message.getMapField(this, 1, opt_noLazyCreate,
+      null));
+};
+
+
+proto.lnrpc.EstimateFeeRequest.prototype.clearAddrtoamountMap = function() {
+  this.getAddrtoamountMap().clear();
+};
+
+
+/**
+ * optional int32 target_conf = 2;
+ * @return {number}
+ */
+proto.lnrpc.EstimateFeeRequest.prototype.getTargetConf = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.EstimateFeeRequest.prototype.setTargetConf = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.EstimateFeeResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.EstimateFeeResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.EstimateFeeResponse.displayName = 'proto.lnrpc.EstimateFeeResponse';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.EstimateFeeResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.EstimateFeeResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.EstimateFeeResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EstimateFeeResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    feeSat: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    feerateSatPerByte: jspb.Message.getFieldWithDefault(msg, 2, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.EstimateFeeResponse}
+ */
+proto.lnrpc.EstimateFeeResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.EstimateFeeResponse;
+  return proto.lnrpc.EstimateFeeResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.EstimateFeeResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.EstimateFeeResponse}
+ */
+proto.lnrpc.EstimateFeeResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setFeeSat(value);
+      break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setFeerateSatPerByte(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.EstimateFeeResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.EstimateFeeResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.EstimateFeeResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EstimateFeeResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getFeeSat();
+  if (f !== 0) {
+    writer.writeInt64(
+      1,
+      f
+    );
+  }
+  f = message.getFeerateSatPerByte();
+  if (f !== 0) {
+    writer.writeInt64(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional int64 fee_sat = 1;
+ * @return {number}
+ */
+proto.lnrpc.EstimateFeeResponse.prototype.getFeeSat = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.EstimateFeeResponse.prototype.setFeeSat = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional int64 feerate_sat_per_byte = 2;
+ * @return {number}
+ */
+proto.lnrpc.EstimateFeeResponse.prototype.getFeerateSatPerByte = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.EstimateFeeResponse.prototype.setFeerateSatPerByte = function(value) {
   jspb.Message.setField(this, 2, value);
 };
 
@@ -7048,7 +7812,8 @@ proto.lnrpc.Channel.toObject = function(includeInstance, msg) {
     proto.lnrpc.HTLC.toObject, includeInstance),
     csvDelay: jspb.Message.getFieldWithDefault(msg, 16, 0),
     pb_private: jspb.Message.getFieldWithDefault(msg, 17, false),
-    initiator: jspb.Message.getFieldWithDefault(msg, 18, false)
+    initiator: jspb.Message.getFieldWithDefault(msg, 18, false),
+    chanStatusFlags: jspb.Message.getFieldWithDefault(msg, 19, "")
   };
 
   if (includeInstance) {
@@ -7157,6 +7922,10 @@ proto.lnrpc.Channel.deserializeBinaryFromReader = function(msg, reader) {
     case 18:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setInitiator(value);
+      break;
+    case 19:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setChanStatusFlags(value);
       break;
     default:
       reader.skipField();
@@ -7311,6 +8080,13 @@ proto.lnrpc.Channel.serializeBinaryToWriter = function(message, writer) {
   if (f) {
     writer.writeBool(
       18,
+      f
+    );
+  }
+  f = message.getChanStatusFlags();
+  if (f.length > 0) {
+    writer.writeString(
+      19,
       f
     );
   }
@@ -7606,6 +8382,21 @@ proto.lnrpc.Channel.prototype.getInitiator = function() {
 /** @param {boolean} value */
 proto.lnrpc.Channel.prototype.setInitiator = function(value) {
   jspb.Message.setField(this, 18, value);
+};
+
+
+/**
+ * optional string chan_status_flags = 19;
+ * @return {string}
+ */
+proto.lnrpc.Channel.prototype.getChanStatusFlags = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 19, ""));
+};
+
+
+/** @param {string} value */
+proto.lnrpc.Channel.prototype.setChanStatusFlags = function(value) {
+  jspb.Message.setField(this, 19, value);
 };
 
 
@@ -8916,7 +9707,8 @@ proto.lnrpc.Peer.toObject = function(includeInstance, msg) {
     satSent: jspb.Message.getFieldWithDefault(msg, 6, 0),
     satRecv: jspb.Message.getFieldWithDefault(msg, 7, 0),
     inbound: jspb.Message.getFieldWithDefault(msg, 8, false),
-    pingTime: jspb.Message.getFieldWithDefault(msg, 9, 0)
+    pingTime: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    syncType: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -8984,6 +9776,10 @@ proto.lnrpc.Peer.deserializeBinaryFromReader = function(msg, reader) {
     case 9:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setPingTime(value);
+      break;
+    case 10:
+      var value = /** @type {!proto.lnrpc.Peer.SyncType} */ (reader.readEnum());
+      msg.setSyncType(value);
       break;
     default:
       reader.skipField();
@@ -9070,8 +9866,24 @@ proto.lnrpc.Peer.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getSyncType();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      10,
+      f
+    );
+  }
 };
 
+
+/**
+ * @enum {number}
+ */
+proto.lnrpc.Peer.SyncType = {
+  UNKNOWN_SYNC: 0,
+  ACTIVE_SYNC: 1,
+  PASSIVE_SYNC: 2
+};
 
 /**
  * optional string pub_key = 1;
@@ -9192,6 +10004,21 @@ proto.lnrpc.Peer.prototype.getPingTime = function() {
 /** @param {number} value */
 proto.lnrpc.Peer.prototype.setPingTime = function(value) {
   jspb.Message.setField(this, 9, value);
+};
+
+
+/**
+ * optional SyncType sync_type = 10;
+ * @return {!proto.lnrpc.Peer.SyncType}
+ */
+proto.lnrpc.Peer.prototype.getSyncType = function() {
+  return /** @type {!proto.lnrpc.Peer.SyncType} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/** @param {!proto.lnrpc.Peer.SyncType} value */
+proto.lnrpc.Peer.prototype.setSyncType = function(value) {
+  jspb.Message.setField(this, 10, value);
 };
 
 
@@ -14183,6 +15010,478 @@ proto.lnrpc.PendingChannelsResponse.prototype.clearWaitingCloseChannelsList = fu
  * @extends {jspb.Message}
  * @constructor
  */
+proto.lnrpc.ChannelEventSubscription = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ChannelEventSubscription, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChannelEventSubscription.displayName = 'proto.lnrpc.ChannelEventSubscription';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChannelEventSubscription.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChannelEventSubscription.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChannelEventSubscription} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelEventSubscription.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChannelEventSubscription}
+ */
+proto.lnrpc.ChannelEventSubscription.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChannelEventSubscription;
+  return proto.lnrpc.ChannelEventSubscription.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChannelEventSubscription} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChannelEventSubscription}
+ */
+proto.lnrpc.ChannelEventSubscription.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelEventSubscription.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChannelEventSubscription.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChannelEventSubscription} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelEventSubscription.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChannelEventUpdate = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.lnrpc.ChannelEventUpdate.oneofGroups_);
+};
+goog.inherits(proto.lnrpc.ChannelEventUpdate, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChannelEventUpdate.displayName = 'proto.lnrpc.ChannelEventUpdate';
+}
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.lnrpc.ChannelEventUpdate.oneofGroups_ = [[1,2,3,4]];
+
+/**
+ * @enum {number}
+ */
+proto.lnrpc.ChannelEventUpdate.ChannelCase = {
+  CHANNEL_NOT_SET: 0,
+  OPEN_CHANNEL: 1,
+  CLOSED_CHANNEL: 2,
+  ACTIVE_CHANNEL: 3,
+  INACTIVE_CHANNEL: 4
+};
+
+/**
+ * @return {proto.lnrpc.ChannelEventUpdate.ChannelCase}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getChannelCase = function() {
+  return /** @type {proto.lnrpc.ChannelEventUpdate.ChannelCase} */(jspb.Message.computeOneofCase(this, proto.lnrpc.ChannelEventUpdate.oneofGroups_[0]));
+};
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChannelEventUpdate.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChannelEventUpdate} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelEventUpdate.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    openChannel: (f = msg.getOpenChannel()) && proto.lnrpc.Channel.toObject(includeInstance, f),
+    closedChannel: (f = msg.getClosedChannel()) && proto.lnrpc.ChannelCloseSummary.toObject(includeInstance, f),
+    activeChannel: (f = msg.getActiveChannel()) && proto.lnrpc.ChannelPoint.toObject(includeInstance, f),
+    inactiveChannel: (f = msg.getInactiveChannel()) && proto.lnrpc.ChannelPoint.toObject(includeInstance, f),
+    type: jspb.Message.getFieldWithDefault(msg, 5, 0)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChannelEventUpdate}
+ */
+proto.lnrpc.ChannelEventUpdate.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChannelEventUpdate;
+  return proto.lnrpc.ChannelEventUpdate.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChannelEventUpdate} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChannelEventUpdate}
+ */
+proto.lnrpc.ChannelEventUpdate.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.Channel;
+      reader.readMessage(value,proto.lnrpc.Channel.deserializeBinaryFromReader);
+      msg.setOpenChannel(value);
+      break;
+    case 2:
+      var value = new proto.lnrpc.ChannelCloseSummary;
+      reader.readMessage(value,proto.lnrpc.ChannelCloseSummary.deserializeBinaryFromReader);
+      msg.setClosedChannel(value);
+      break;
+    case 3:
+      var value = new proto.lnrpc.ChannelPoint;
+      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      msg.setActiveChannel(value);
+      break;
+    case 4:
+      var value = new proto.lnrpc.ChannelPoint;
+      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      msg.setInactiveChannel(value);
+      break;
+    case 5:
+      var value = /** @type {!proto.lnrpc.ChannelEventUpdate.UpdateType} */ (reader.readEnum());
+      msg.setType(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChannelEventUpdate.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChannelEventUpdate} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelEventUpdate.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getOpenChannel();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.lnrpc.Channel.serializeBinaryToWriter
+    );
+  }
+  f = message.getClosedChannel();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto.lnrpc.ChannelCloseSummary.serializeBinaryToWriter
+    );
+  }
+  f = message.getActiveChannel();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+    );
+  }
+  f = message.getInactiveChannel();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+    );
+  }
+  f = message.getType();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      5,
+      f
+    );
+  }
+};
+
+
+/**
+ * @enum {number}
+ */
+proto.lnrpc.ChannelEventUpdate.UpdateType = {
+  OPEN_CHANNEL: 0,
+  CLOSED_CHANNEL: 1,
+  ACTIVE_CHANNEL: 2,
+  INACTIVE_CHANNEL: 3
+};
+
+/**
+ * optional Channel open_channel = 1;
+ * @return {?proto.lnrpc.Channel}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getOpenChannel = function() {
+  return /** @type{?proto.lnrpc.Channel} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.Channel, 1));
+};
+
+
+/** @param {?proto.lnrpc.Channel|undefined} value */
+proto.lnrpc.ChannelEventUpdate.prototype.setOpenChannel = function(value) {
+  jspb.Message.setOneofWrapperField(this, 1, proto.lnrpc.ChannelEventUpdate.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.ChannelEventUpdate.prototype.clearOpenChannel = function() {
+  this.setOpenChannel(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.hasOpenChannel = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional ChannelCloseSummary closed_channel = 2;
+ * @return {?proto.lnrpc.ChannelCloseSummary}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getClosedChannel = function() {
+  return /** @type{?proto.lnrpc.ChannelCloseSummary} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelCloseSummary, 2));
+};
+
+
+/** @param {?proto.lnrpc.ChannelCloseSummary|undefined} value */
+proto.lnrpc.ChannelEventUpdate.prototype.setClosedChannel = function(value) {
+  jspb.Message.setOneofWrapperField(this, 2, proto.lnrpc.ChannelEventUpdate.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.ChannelEventUpdate.prototype.clearClosedChannel = function() {
+  this.setClosedChannel(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.hasClosedChannel = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional ChannelPoint active_channel = 3;
+ * @return {?proto.lnrpc.ChannelPoint}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getActiveChannel = function() {
+  return /** @type{?proto.lnrpc.ChannelPoint} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelPoint, 3));
+};
+
+
+/** @param {?proto.lnrpc.ChannelPoint|undefined} value */
+proto.lnrpc.ChannelEventUpdate.prototype.setActiveChannel = function(value) {
+  jspb.Message.setOneofWrapperField(this, 3, proto.lnrpc.ChannelEventUpdate.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.ChannelEventUpdate.prototype.clearActiveChannel = function() {
+  this.setActiveChannel(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.hasActiveChannel = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional ChannelPoint inactive_channel = 4;
+ * @return {?proto.lnrpc.ChannelPoint}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getInactiveChannel = function() {
+  return /** @type{?proto.lnrpc.ChannelPoint} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelPoint, 4));
+};
+
+
+/** @param {?proto.lnrpc.ChannelPoint|undefined} value */
+proto.lnrpc.ChannelEventUpdate.prototype.setInactiveChannel = function(value) {
+  jspb.Message.setOneofWrapperField(this, 4, proto.lnrpc.ChannelEventUpdate.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.ChannelEventUpdate.prototype.clearInactiveChannel = function() {
+  this.setInactiveChannel(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.hasInactiveChannel = function() {
+  return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional UpdateType type = 5;
+ * @return {!proto.lnrpc.ChannelEventUpdate.UpdateType}
+ */
+proto.lnrpc.ChannelEventUpdate.prototype.getType = function() {
+  return /** @type {!proto.lnrpc.ChannelEventUpdate.UpdateType} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/** @param {!proto.lnrpc.ChannelEventUpdate.UpdateType} value */
+proto.lnrpc.ChannelEventUpdate.prototype.setType = function(value) {
+  jspb.Message.setField(this, 5, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
 proto.lnrpc.WalletBalanceRequest = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
@@ -14781,12 +16080,19 @@ proto.lnrpc.ChannelBalanceResponse.prototype.setPendingOpenBalance = function(va
  * @constructor
  */
 proto.lnrpc.QueryRoutesRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.lnrpc.QueryRoutesRequest.repeatedFields_, null);
 };
 goog.inherits(proto.lnrpc.QueryRoutesRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.lnrpc.QueryRoutesRequest.displayName = 'proto.lnrpc.QueryRoutesRequest';
 }
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.lnrpc.QueryRoutesRequest.repeatedFields_ = [6,7];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -14820,7 +16126,11 @@ proto.lnrpc.QueryRoutesRequest.toObject = function(includeInstance, msg) {
     amt: jspb.Message.getFieldWithDefault(msg, 2, 0),
     numRoutes: jspb.Message.getFieldWithDefault(msg, 3, 0),
     finalCltvDelta: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    feeLimit: (f = msg.getFeeLimit()) && proto.lnrpc.FeeLimit.toObject(includeInstance, f)
+    feeLimit: (f = msg.getFeeLimit()) && proto.lnrpc.FeeLimit.toObject(includeInstance, f),
+    ignoredNodesList: msg.getIgnoredNodesList_asB64(),
+    ignoredEdgesList: jspb.Message.toObjectList(msg.getIgnoredEdgesList(),
+    proto.lnrpc.EdgeLocator.toObject, includeInstance),
+    sourcePubKey: jspb.Message.getFieldWithDefault(msg, 8, "")
   };
 
   if (includeInstance) {
@@ -14877,6 +16187,19 @@ proto.lnrpc.QueryRoutesRequest.deserializeBinaryFromReader = function(msg, reade
       var value = new proto.lnrpc.FeeLimit;
       reader.readMessage(value,proto.lnrpc.FeeLimit.deserializeBinaryFromReader);
       msg.setFeeLimit(value);
+      break;
+    case 6:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.addIgnoredNodes(value);
+      break;
+    case 7:
+      var value = new proto.lnrpc.EdgeLocator;
+      reader.readMessage(value,proto.lnrpc.EdgeLocator.deserializeBinaryFromReader);
+      msg.addIgnoredEdges(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSourcePubKey(value);
       break;
     default:
       reader.skipField();
@@ -14941,6 +16264,28 @@ proto.lnrpc.QueryRoutesRequest.serializeBinaryToWriter = function(message, write
       5,
       f,
       proto.lnrpc.FeeLimit.serializeBinaryToWriter
+    );
+  }
+  f = message.getIgnoredNodesList_asU8();
+  if (f.length > 0) {
+    writer.writeRepeatedBytes(
+      6,
+      f
+    );
+  }
+  f = message.getIgnoredEdgesList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      7,
+      f,
+      proto.lnrpc.EdgeLocator.serializeBinaryToWriter
+    );
+  }
+  f = message.getSourcePubKey();
+  if (f.length > 0) {
+    writer.writeString(
+      8,
+      f
     );
   }
 };
@@ -15033,6 +16378,276 @@ proto.lnrpc.QueryRoutesRequest.prototype.clearFeeLimit = function() {
  */
 proto.lnrpc.QueryRoutesRequest.prototype.hasFeeLimit = function() {
   return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * repeated bytes ignored_nodes = 6;
+ * @return {!(Array<!Uint8Array>|Array<string>)}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.getIgnoredNodesList = function() {
+  return /** @type {!(Array<!Uint8Array>|Array<string>)} */ (jspb.Message.getRepeatedField(this, 6));
+};
+
+
+/**
+ * repeated bytes ignored_nodes = 6;
+ * This is a type-conversion wrapper around `getIgnoredNodesList()`
+ * @return {!Array.<string>}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.getIgnoredNodesList_asB64 = function() {
+  return /** @type {!Array.<string>} */ (jspb.Message.bytesListAsB64(
+      this.getIgnoredNodesList()));
+};
+
+
+/**
+ * repeated bytes ignored_nodes = 6;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getIgnoredNodesList()`
+ * @return {!Array.<!Uint8Array>}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.getIgnoredNodesList_asU8 = function() {
+  return /** @type {!Array.<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
+      this.getIgnoredNodesList()));
+};
+
+
+/** @param {!(Array<!Uint8Array>|Array<string>)} value */
+proto.lnrpc.QueryRoutesRequest.prototype.setIgnoredNodesList = function(value) {
+  jspb.Message.setField(this, 6, value || []);
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @param {number=} opt_index
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.addIgnoredNodes = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 6, value, opt_index);
+};
+
+
+proto.lnrpc.QueryRoutesRequest.prototype.clearIgnoredNodesList = function() {
+  this.setIgnoredNodesList([]);
+};
+
+
+/**
+ * repeated EdgeLocator ignored_edges = 7;
+ * @return {!Array.<!proto.lnrpc.EdgeLocator>}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.getIgnoredEdgesList = function() {
+  return /** @type{!Array.<!proto.lnrpc.EdgeLocator>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.lnrpc.EdgeLocator, 7));
+};
+
+
+/** @param {!Array.<!proto.lnrpc.EdgeLocator>} value */
+proto.lnrpc.QueryRoutesRequest.prototype.setIgnoredEdgesList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 7, value);
+};
+
+
+/**
+ * @param {!proto.lnrpc.EdgeLocator=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.lnrpc.EdgeLocator}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.addIgnoredEdges = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.lnrpc.EdgeLocator, opt_index);
+};
+
+
+proto.lnrpc.QueryRoutesRequest.prototype.clearIgnoredEdgesList = function() {
+  this.setIgnoredEdgesList([]);
+};
+
+
+/**
+ * optional string source_pub_key = 8;
+ * @return {string}
+ */
+proto.lnrpc.QueryRoutesRequest.prototype.getSourcePubKey = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/** @param {string} value */
+proto.lnrpc.QueryRoutesRequest.prototype.setSourcePubKey = function(value) {
+  jspb.Message.setField(this, 8, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.EdgeLocator = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.EdgeLocator, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.EdgeLocator.displayName = 'proto.lnrpc.EdgeLocator';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.EdgeLocator.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.EdgeLocator.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.EdgeLocator} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EdgeLocator.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    channelId: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    directionReverse: jspb.Message.getFieldWithDefault(msg, 2, false)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.EdgeLocator}
+ */
+proto.lnrpc.EdgeLocator.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.EdgeLocator;
+  return proto.lnrpc.EdgeLocator.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.EdgeLocator} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.EdgeLocator}
+ */
+proto.lnrpc.EdgeLocator.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setChannelId(value);
+      break;
+    case 2:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setDirectionReverse(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.EdgeLocator.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.EdgeLocator.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.EdgeLocator} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.EdgeLocator.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChannelId();
+  if (f !== 0) {
+    writer.writeUint64(
+      1,
+      f
+    );
+  }
+  f = message.getDirectionReverse();
+  if (f) {
+    writer.writeBool(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional uint64 channel_id = 1;
+ * @return {number}
+ */
+proto.lnrpc.EdgeLocator.prototype.getChannelId = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.EdgeLocator.prototype.setChannelId = function(value) {
+  jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * optional bool direction_reverse = 2;
+ * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
+ * You should avoid comparisons like {@code val === true/false} in those cases.
+ * @return {boolean}
+ */
+proto.lnrpc.EdgeLocator.prototype.getDirectionReverse = function() {
+  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 2, false));
+};
+
+
+/** @param {boolean} value */
+proto.lnrpc.EdgeLocator.prototype.setDirectionReverse = function(value) {
+  jspb.Message.setField(this, 2, value);
 };
 
 
@@ -16689,7 +18304,8 @@ proto.lnrpc.RoutingPolicy.toObject = function(includeInstance, msg) {
     minHtlc: jspb.Message.getFieldWithDefault(msg, 2, 0),
     feeBaseMsat: jspb.Message.getFieldWithDefault(msg, 3, 0),
     feeRateMilliMsat: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    disabled: jspb.Message.getFieldWithDefault(msg, 5, false)
+    disabled: jspb.Message.getFieldWithDefault(msg, 5, false),
+    maxHtlcMsat: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -16745,6 +18361,10 @@ proto.lnrpc.RoutingPolicy.deserializeBinaryFromReader = function(msg, reader) {
     case 5:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setDisabled(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setMaxHtlcMsat(value);
       break;
     default:
       reader.skipField();
@@ -16807,6 +18427,13 @@ proto.lnrpc.RoutingPolicy.serializeBinaryToWriter = function(message, writer) {
   if (f) {
     writer.writeBool(
       5,
+      f
+    );
+  }
+  f = message.getMaxHtlcMsat();
+  if (f !== 0) {
+    writer.writeUint64(
+      6,
       f
     );
   }
@@ -16887,6 +18514,21 @@ proto.lnrpc.RoutingPolicy.prototype.getDisabled = function() {
 /** @param {boolean} value */
 proto.lnrpc.RoutingPolicy.prototype.setDisabled = function(value) {
   jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * optional uint64 max_htlc_msat = 6;
+ * @return {number}
+ */
+proto.lnrpc.RoutingPolicy.prototype.getMaxHtlcMsat = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.RoutingPolicy.prototype.setMaxHtlcMsat = function(value) {
+  jspb.Message.setField(this, 6, value);
 };
 
 
@@ -17926,7 +19568,8 @@ proto.lnrpc.NetworkInfo.toObject = function(includeInstance, msg) {
     totalNetworkCapacity: jspb.Message.getFieldWithDefault(msg, 6, 0),
     avgChannelSize: +jspb.Message.getFieldWithDefault(msg, 7, 0.0),
     minChannelSize: jspb.Message.getFieldWithDefault(msg, 8, 0),
-    maxChannelSize: jspb.Message.getFieldWithDefault(msg, 9, 0)
+    maxChannelSize: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    medianChannelSizeSat: jspb.Message.getFieldWithDefault(msg, 10, 0)
   };
 
   if (includeInstance) {
@@ -17998,6 +19641,10 @@ proto.lnrpc.NetworkInfo.deserializeBinaryFromReader = function(msg, reader) {
     case 9:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setMaxChannelSize(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMedianChannelSizeSat(value);
       break;
     default:
       reader.skipField();
@@ -18088,6 +19735,13 @@ proto.lnrpc.NetworkInfo.serializeBinaryToWriter = function(message, writer) {
   if (f !== 0) {
     writer.writeInt64(
       9,
+      f
+    );
+  }
+  f = message.getMedianChannelSizeSat();
+  if (f !== 0) {
+    writer.writeInt64(
+      10,
       f
     );
   }
@@ -18226,6 +19880,21 @@ proto.lnrpc.NetworkInfo.prototype.getMaxChannelSize = function() {
 /** @param {number} value */
 proto.lnrpc.NetworkInfo.prototype.setMaxChannelSize = function(value) {
   jspb.Message.setField(this, 9, value);
+};
+
+
+/**
+ * optional int64 median_channel_size_sat = 10;
+ * @return {number}
+ */
+proto.lnrpc.NetworkInfo.prototype.getMedianChannelSizeSat = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/** @param {number} value */
+proto.lnrpc.NetworkInfo.prototype.setMedianChannelSizeSat = function(value) {
+  jspb.Message.setField(this, 10, value);
 };
 
 
@@ -20456,7 +22125,9 @@ proto.lnrpc.Invoice.serializeBinaryToWriter = function(message, writer) {
  */
 proto.lnrpc.Invoice.InvoiceState = {
   OPEN: 0,
-  SETTLED: 1
+  SETTLED: 1,
+  CANCELED: 2,
+  ACCEPTED: 3
 };
 
 /**
@@ -25665,12 +27336,1687 @@ proto.lnrpc.ForwardingHistoryResponse.prototype.setLastOffsetIndex = function(va
 };
 
 
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ExportChannelBackupRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ExportChannelBackupRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ExportChannelBackupRequest.displayName = 'proto.lnrpc.ExportChannelBackupRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ExportChannelBackupRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ExportChannelBackupRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ExportChannelBackupRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ExportChannelBackupRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    chanPoint: (f = msg.getChanPoint()) && proto.lnrpc.ChannelPoint.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ExportChannelBackupRequest}
+ */
+proto.lnrpc.ExportChannelBackupRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ExportChannelBackupRequest;
+  return proto.lnrpc.ExportChannelBackupRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ExportChannelBackupRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ExportChannelBackupRequest}
+ */
+proto.lnrpc.ExportChannelBackupRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelPoint;
+      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      msg.setChanPoint(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ExportChannelBackupRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ExportChannelBackupRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ExportChannelBackupRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ExportChannelBackupRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChanPoint();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional ChannelPoint chan_point = 1;
+ * @return {?proto.lnrpc.ChannelPoint}
+ */
+proto.lnrpc.ExportChannelBackupRequest.prototype.getChanPoint = function() {
+  return /** @type{?proto.lnrpc.ChannelPoint} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelPoint, 1));
+};
+
+
+/** @param {?proto.lnrpc.ChannelPoint|undefined} value */
+proto.lnrpc.ExportChannelBackupRequest.prototype.setChanPoint = function(value) {
+  jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+proto.lnrpc.ExportChannelBackupRequest.prototype.clearChanPoint = function() {
+  this.setChanPoint(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ExportChannelBackupRequest.prototype.hasChanPoint = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChannelBackup = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ChannelBackup, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChannelBackup.displayName = 'proto.lnrpc.ChannelBackup';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChannelBackup.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChannelBackup.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChannelBackup} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackup.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    chanPoint: (f = msg.getChanPoint()) && proto.lnrpc.ChannelPoint.toObject(includeInstance, f),
+    chanBackup: msg.getChanBackup_asB64()
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChannelBackup}
+ */
+proto.lnrpc.ChannelBackup.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChannelBackup;
+  return proto.lnrpc.ChannelBackup.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChannelBackup} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChannelBackup}
+ */
+proto.lnrpc.ChannelBackup.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelPoint;
+      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      msg.setChanPoint(value);
+      break;
+    case 2:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setChanBackup(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelBackup.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChannelBackup.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChannelBackup} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackup.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChanPoint();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+    );
+  }
+  f = message.getChanBackup_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional ChannelPoint chan_point = 1;
+ * @return {?proto.lnrpc.ChannelPoint}
+ */
+proto.lnrpc.ChannelBackup.prototype.getChanPoint = function() {
+  return /** @type{?proto.lnrpc.ChannelPoint} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelPoint, 1));
+};
+
+
+/** @param {?proto.lnrpc.ChannelPoint|undefined} value */
+proto.lnrpc.ChannelBackup.prototype.setChanPoint = function(value) {
+  jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+proto.lnrpc.ChannelBackup.prototype.clearChanPoint = function() {
+  this.setChanPoint(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChannelBackup.prototype.hasChanPoint = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional bytes chan_backup = 2;
+ * @return {!(string|Uint8Array)}
+ */
+proto.lnrpc.ChannelBackup.prototype.getChanBackup = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * optional bytes chan_backup = 2;
+ * This is a type-conversion wrapper around `getChanBackup()`
+ * @return {string}
+ */
+proto.lnrpc.ChannelBackup.prototype.getChanBackup_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getChanBackup()));
+};
+
+
+/**
+ * optional bytes chan_backup = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getChanBackup()`
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelBackup.prototype.getChanBackup_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getChanBackup()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.lnrpc.ChannelBackup.prototype.setChanBackup = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.MultiChanBackup = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.lnrpc.MultiChanBackup.repeatedFields_, null);
+};
+goog.inherits(proto.lnrpc.MultiChanBackup, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.MultiChanBackup.displayName = 'proto.lnrpc.MultiChanBackup';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.lnrpc.MultiChanBackup.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.MultiChanBackup.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.MultiChanBackup.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.MultiChanBackup} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.MultiChanBackup.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    chanPointsList: jspb.Message.toObjectList(msg.getChanPointsList(),
+    proto.lnrpc.ChannelPoint.toObject, includeInstance),
+    multiChanBackup: msg.getMultiChanBackup_asB64()
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.MultiChanBackup}
+ */
+proto.lnrpc.MultiChanBackup.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.MultiChanBackup;
+  return proto.lnrpc.MultiChanBackup.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.MultiChanBackup} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.MultiChanBackup}
+ */
+proto.lnrpc.MultiChanBackup.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelPoint;
+      reader.readMessage(value,proto.lnrpc.ChannelPoint.deserializeBinaryFromReader);
+      msg.addChanPoints(value);
+      break;
+    case 2:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setMultiChanBackup(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.MultiChanBackup.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.MultiChanBackup.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.MultiChanBackup} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.MultiChanBackup.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChanPointsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelPoint.serializeBinaryToWriter
+    );
+  }
+  f = message.getMultiChanBackup_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * repeated ChannelPoint chan_points = 1;
+ * @return {!Array.<!proto.lnrpc.ChannelPoint>}
+ */
+proto.lnrpc.MultiChanBackup.prototype.getChanPointsList = function() {
+  return /** @type{!Array.<!proto.lnrpc.ChannelPoint>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.lnrpc.ChannelPoint, 1));
+};
+
+
+/** @param {!Array.<!proto.lnrpc.ChannelPoint>} value */
+proto.lnrpc.MultiChanBackup.prototype.setChanPointsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 1, value);
+};
+
+
+/**
+ * @param {!proto.lnrpc.ChannelPoint=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.lnrpc.ChannelPoint}
+ */
+proto.lnrpc.MultiChanBackup.prototype.addChanPoints = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.lnrpc.ChannelPoint, opt_index);
+};
+
+
+proto.lnrpc.MultiChanBackup.prototype.clearChanPointsList = function() {
+  this.setChanPointsList([]);
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * @return {!(string|Uint8Array)}
+ */
+proto.lnrpc.MultiChanBackup.prototype.getMultiChanBackup = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * This is a type-conversion wrapper around `getMultiChanBackup()`
+ * @return {string}
+ */
+proto.lnrpc.MultiChanBackup.prototype.getMultiChanBackup_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getMultiChanBackup()));
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getMultiChanBackup()`
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.MultiChanBackup.prototype.getMultiChanBackup_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getMultiChanBackup()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.lnrpc.MultiChanBackup.prototype.setMultiChanBackup = function(value) {
+  jspb.Message.setField(this, 2, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChanBackupExportRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ChanBackupExportRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChanBackupExportRequest.displayName = 'proto.lnrpc.ChanBackupExportRequest';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChanBackupExportRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChanBackupExportRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChanBackupExportRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChanBackupExportRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChanBackupExportRequest}
+ */
+proto.lnrpc.ChanBackupExportRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChanBackupExportRequest;
+  return proto.lnrpc.ChanBackupExportRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChanBackupExportRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChanBackupExportRequest}
+ */
+proto.lnrpc.ChanBackupExportRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChanBackupExportRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChanBackupExportRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChanBackupExportRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChanBackupExportRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChanBackupSnapshot = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ChanBackupSnapshot, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChanBackupSnapshot.displayName = 'proto.lnrpc.ChanBackupSnapshot';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChanBackupSnapshot.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChanBackupSnapshot} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChanBackupSnapshot.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    singleChanBackups: (f = msg.getSingleChanBackups()) && proto.lnrpc.ChannelBackups.toObject(includeInstance, f),
+    multiChanBackup: (f = msg.getMultiChanBackup()) && proto.lnrpc.MultiChanBackup.toObject(includeInstance, f)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChanBackupSnapshot}
+ */
+proto.lnrpc.ChanBackupSnapshot.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChanBackupSnapshot;
+  return proto.lnrpc.ChanBackupSnapshot.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChanBackupSnapshot} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChanBackupSnapshot}
+ */
+proto.lnrpc.ChanBackupSnapshot.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelBackups;
+      reader.readMessage(value,proto.lnrpc.ChannelBackups.deserializeBinaryFromReader);
+      msg.setSingleChanBackups(value);
+      break;
+    case 2:
+      var value = new proto.lnrpc.MultiChanBackup;
+      reader.readMessage(value,proto.lnrpc.MultiChanBackup.deserializeBinaryFromReader);
+      msg.setMultiChanBackup(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChanBackupSnapshot.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChanBackupSnapshot} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChanBackupSnapshot.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getSingleChanBackups();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelBackups.serializeBinaryToWriter
+    );
+  }
+  f = message.getMultiChanBackup();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto.lnrpc.MultiChanBackup.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * optional ChannelBackups single_chan_backups = 1;
+ * @return {?proto.lnrpc.ChannelBackups}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.getSingleChanBackups = function() {
+  return /** @type{?proto.lnrpc.ChannelBackups} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelBackups, 1));
+};
+
+
+/** @param {?proto.lnrpc.ChannelBackups|undefined} value */
+proto.lnrpc.ChanBackupSnapshot.prototype.setSingleChanBackups = function(value) {
+  jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+proto.lnrpc.ChanBackupSnapshot.prototype.clearSingleChanBackups = function() {
+  this.setSingleChanBackups(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.hasSingleChanBackups = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional MultiChanBackup multi_chan_backup = 2;
+ * @return {?proto.lnrpc.MultiChanBackup}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.getMultiChanBackup = function() {
+  return /** @type{?proto.lnrpc.MultiChanBackup} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.MultiChanBackup, 2));
+};
+
+
+/** @param {?proto.lnrpc.MultiChanBackup|undefined} value */
+proto.lnrpc.ChanBackupSnapshot.prototype.setMultiChanBackup = function(value) {
+  jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+proto.lnrpc.ChanBackupSnapshot.prototype.clearMultiChanBackup = function() {
+  this.setMultiChanBackup(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.ChanBackupSnapshot.prototype.hasMultiChanBackup = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChannelBackups = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.lnrpc.ChannelBackups.repeatedFields_, null);
+};
+goog.inherits(proto.lnrpc.ChannelBackups, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChannelBackups.displayName = 'proto.lnrpc.ChannelBackups';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.lnrpc.ChannelBackups.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChannelBackups.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChannelBackups.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChannelBackups} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackups.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    chanBackupsList: jspb.Message.toObjectList(msg.getChanBackupsList(),
+    proto.lnrpc.ChannelBackup.toObject, includeInstance)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChannelBackups}
+ */
+proto.lnrpc.ChannelBackups.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChannelBackups;
+  return proto.lnrpc.ChannelBackups.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChannelBackups} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChannelBackups}
+ */
+proto.lnrpc.ChannelBackups.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelBackup;
+      reader.readMessage(value,proto.lnrpc.ChannelBackup.deserializeBinaryFromReader);
+      msg.addChanBackups(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelBackups.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChannelBackups.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChannelBackups} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackups.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChanBackupsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelBackup.serializeBinaryToWriter
+    );
+  }
+};
+
+
+/**
+ * repeated ChannelBackup chan_backups = 1;
+ * @return {!Array.<!proto.lnrpc.ChannelBackup>}
+ */
+proto.lnrpc.ChannelBackups.prototype.getChanBackupsList = function() {
+  return /** @type{!Array.<!proto.lnrpc.ChannelBackup>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.lnrpc.ChannelBackup, 1));
+};
+
+
+/** @param {!Array.<!proto.lnrpc.ChannelBackup>} value */
+proto.lnrpc.ChannelBackups.prototype.setChanBackupsList = function(value) {
+  jspb.Message.setRepeatedWrapperField(this, 1, value);
+};
+
+
+/**
+ * @param {!proto.lnrpc.ChannelBackup=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.lnrpc.ChannelBackup}
+ */
+proto.lnrpc.ChannelBackups.prototype.addChanBackups = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.lnrpc.ChannelBackup, opt_index);
+};
+
+
+proto.lnrpc.ChannelBackups.prototype.clearChanBackupsList = function() {
+  this.setChanBackupsList([]);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.RestoreChanBackupRequest = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, proto.lnrpc.RestoreChanBackupRequest.oneofGroups_);
+};
+goog.inherits(proto.lnrpc.RestoreChanBackupRequest, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.RestoreChanBackupRequest.displayName = 'proto.lnrpc.RestoreChanBackupRequest';
+}
+/**
+ * Oneof group definitions for this message. Each group defines the field
+ * numbers belonging to that group. When of these fields' value is set, all
+ * other fields in the group are cleared. During deserialization, if multiple
+ * fields are encountered for a group, only the last value seen will be kept.
+ * @private {!Array<!Array<number>>}
+ * @const
+ */
+proto.lnrpc.RestoreChanBackupRequest.oneofGroups_ = [[1,2]];
+
+/**
+ * @enum {number}
+ */
+proto.lnrpc.RestoreChanBackupRequest.BackupCase = {
+  BACKUP_NOT_SET: 0,
+  CHAN_BACKUPS: 1,
+  MULTI_CHAN_BACKUP: 2
+};
+
+/**
+ * @return {proto.lnrpc.RestoreChanBackupRequest.BackupCase}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.getBackupCase = function() {
+  return /** @type {proto.lnrpc.RestoreChanBackupRequest.BackupCase} */(jspb.Message.computeOneofCase(this, proto.lnrpc.RestoreChanBackupRequest.oneofGroups_[0]));
+};
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.RestoreChanBackupRequest.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.RestoreChanBackupRequest} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.RestoreChanBackupRequest.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    chanBackups: (f = msg.getChanBackups()) && proto.lnrpc.ChannelBackups.toObject(includeInstance, f),
+    multiChanBackup: msg.getMultiChanBackup_asB64()
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.RestoreChanBackupRequest}
+ */
+proto.lnrpc.RestoreChanBackupRequest.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.RestoreChanBackupRequest;
+  return proto.lnrpc.RestoreChanBackupRequest.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.RestoreChanBackupRequest} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.RestoreChanBackupRequest}
+ */
+proto.lnrpc.RestoreChanBackupRequest.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = new proto.lnrpc.ChannelBackups;
+      reader.readMessage(value,proto.lnrpc.ChannelBackups.deserializeBinaryFromReader);
+      msg.setChanBackups(value);
+      break;
+    case 2:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setMultiChanBackup(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.RestoreChanBackupRequest.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.RestoreChanBackupRequest} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.RestoreChanBackupRequest.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getChanBackups();
+  if (f != null) {
+    writer.writeMessage(
+      1,
+      f,
+      proto.lnrpc.ChannelBackups.serializeBinaryToWriter
+    );
+  }
+  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 2));
+  if (f != null) {
+    writer.writeBytes(
+      2,
+      f
+    );
+  }
+};
+
+
+/**
+ * optional ChannelBackups chan_backups = 1;
+ * @return {?proto.lnrpc.ChannelBackups}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.getChanBackups = function() {
+  return /** @type{?proto.lnrpc.ChannelBackups} */ (
+    jspb.Message.getWrapperField(this, proto.lnrpc.ChannelBackups, 1));
+};
+
+
+/** @param {?proto.lnrpc.ChannelBackups|undefined} value */
+proto.lnrpc.RestoreChanBackupRequest.prototype.setChanBackups = function(value) {
+  jspb.Message.setOneofWrapperField(this, 1, proto.lnrpc.RestoreChanBackupRequest.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.RestoreChanBackupRequest.prototype.clearChanBackups = function() {
+  this.setChanBackups(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.hasChanBackups = function() {
+  return jspb.Message.getField(this, 1) != null;
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * @return {!(string|Uint8Array)}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.getMultiChanBackup = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * This is a type-conversion wrapper around `getMultiChanBackup()`
+ * @return {string}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.getMultiChanBackup_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getMultiChanBackup()));
+};
+
+
+/**
+ * optional bytes multi_chan_backup = 2;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getMultiChanBackup()`
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.getMultiChanBackup_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getMultiChanBackup()));
+};
+
+
+/** @param {!(string|Uint8Array)} value */
+proto.lnrpc.RestoreChanBackupRequest.prototype.setMultiChanBackup = function(value) {
+  jspb.Message.setOneofField(this, 2, proto.lnrpc.RestoreChanBackupRequest.oneofGroups_[0], value);
+};
+
+
+proto.lnrpc.RestoreChanBackupRequest.prototype.clearMultiChanBackup = function() {
+  jspb.Message.setOneofField(this, 2, proto.lnrpc.RestoreChanBackupRequest.oneofGroups_[0], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {!boolean}
+ */
+proto.lnrpc.RestoreChanBackupRequest.prototype.hasMultiChanBackup = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.RestoreBackupResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.RestoreBackupResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.RestoreBackupResponse.displayName = 'proto.lnrpc.RestoreBackupResponse';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.RestoreBackupResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.RestoreBackupResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.RestoreBackupResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.RestoreBackupResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.RestoreBackupResponse}
+ */
+proto.lnrpc.RestoreBackupResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.RestoreBackupResponse;
+  return proto.lnrpc.RestoreBackupResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.RestoreBackupResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.RestoreBackupResponse}
+ */
+proto.lnrpc.RestoreBackupResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.RestoreBackupResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.RestoreBackupResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.RestoreBackupResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.RestoreBackupResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.ChannelBackupSubscription = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.ChannelBackupSubscription, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.ChannelBackupSubscription.displayName = 'proto.lnrpc.ChannelBackupSubscription';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.ChannelBackupSubscription.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.ChannelBackupSubscription.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.ChannelBackupSubscription} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackupSubscription.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.ChannelBackupSubscription}
+ */
+proto.lnrpc.ChannelBackupSubscription.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.ChannelBackupSubscription;
+  return proto.lnrpc.ChannelBackupSubscription.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.ChannelBackupSubscription} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.ChannelBackupSubscription}
+ */
+proto.lnrpc.ChannelBackupSubscription.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.ChannelBackupSubscription.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.ChannelBackupSubscription.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.ChannelBackupSubscription} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.ChannelBackupSubscription.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.lnrpc.VerifyChanBackupResponse = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+};
+goog.inherits(proto.lnrpc.VerifyChanBackupResponse, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.lnrpc.VerifyChanBackupResponse.displayName = 'proto.lnrpc.VerifyChanBackupResponse';
+}
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.lnrpc.VerifyChanBackupResponse.prototype.toObject = function(opt_includeInstance) {
+  return proto.lnrpc.VerifyChanBackupResponse.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.lnrpc.VerifyChanBackupResponse} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.VerifyChanBackupResponse.toObject = function(includeInstance, msg) {
+  var f, obj = {
+
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.lnrpc.VerifyChanBackupResponse}
+ */
+proto.lnrpc.VerifyChanBackupResponse.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.lnrpc.VerifyChanBackupResponse;
+  return proto.lnrpc.VerifyChanBackupResponse.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.lnrpc.VerifyChanBackupResponse} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.lnrpc.VerifyChanBackupResponse}
+ */
+proto.lnrpc.VerifyChanBackupResponse.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.lnrpc.VerifyChanBackupResponse.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.lnrpc.VerifyChanBackupResponse.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.lnrpc.VerifyChanBackupResponse} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.lnrpc.VerifyChanBackupResponse.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+};
+
+
 /**
  * @enum {number}
  */
 proto.lnrpc.AddressType = {
   WITNESS_PUBKEY_HASH: 0,
-  NESTED_PUBKEY_HASH: 1
+  NESTED_PUBKEY_HASH: 1,
+  UNUSED_WITNESS_PUBKEY_HASH: 2,
+  UNUSED_NESTED_PUBKEY_HASH: 3
 };
 
 goog.object.extend(exports, proto.lnrpc);
