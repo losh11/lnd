@@ -44,6 +44,7 @@ import (
 	"github.com/lightningnetwork/lnd/netann"
 	"github.com/lightningnetwork/lnd/pool"
 	"github.com/lightningnetwork/lnd/routing"
+	"github.com/lightningnetwork/lnd/routing/route"
 	"github.com/lightningnetwork/lnd/sweep"
 	"github.com/lightningnetwork/lnd/ticker"
 	"github.com/lightningnetwork/lnd/tor"
@@ -673,23 +674,22 @@ func newServer(listenAddrs []net.Addr, chanDB *channeldb.DB, cc *chainControl,
 	}
 
 	s.authGossiper = discovery.New(discovery.Config{
-		Router:                    s.chanRouter,
-		Notifier:                  s.cc.chainNotifier,
-		ChainHash:                 *activeNetParams.GenesisHash,
-		Broadcast:                 s.BroadcastMessage,
-		ChanSeries:                chanSeries,
-		NotifyWhenOnline:          s.NotifyWhenOnline,
-		NotifyWhenOffline:         s.NotifyWhenOffline,
-		ProofMatureDelta:          0,
-		TrickleDelay:              time.Millisecond * time.Duration(cfg.TrickleDelay),
-		RetransmitDelay:           time.Minute * 30,
-		WaitingProofStore:         waitingProofStore,
-		MessageStore:              gossipMessageStore,
-		AnnSigner:                 s.nodeSigner,
-		RotateTicker:              ticker.New(discovery.DefaultSyncerRotationInterval),
-		HistoricalSyncTicker:      ticker.New(cfg.HistoricalSyncInterval),
-		ActiveSyncerTimeoutTicker: ticker.New(discovery.DefaultActiveSyncerTimeout),
-		NumActiveSyncers:          cfg.NumGraphSyncPeers,
+		Router:               s.chanRouter,
+		Notifier:             s.cc.chainNotifier,
+		ChainHash:            *activeNetParams.GenesisHash,
+		Broadcast:            s.BroadcastMessage,
+		ChanSeries:           chanSeries,
+		NotifyWhenOnline:     s.NotifyWhenOnline,
+		NotifyWhenOffline:    s.NotifyWhenOffline,
+		ProofMatureDelta:     0,
+		TrickleDelay:         time.Millisecond * time.Duration(cfg.TrickleDelay),
+		RetransmitDelay:      time.Minute * 30,
+		WaitingProofStore:    waitingProofStore,
+		MessageStore:         gossipMessageStore,
+		AnnSigner:            s.nodeSigner,
+		RotateTicker:         ticker.New(discovery.DefaultSyncerRotationInterval),
+		HistoricalSyncTicker: ticker.New(cfg.HistoricalSyncInterval),
+		NumActiveSyncers:     cfg.NumGraphSyncPeers,
 	},
 		s.identityPriv.PubKey(),
 	)
@@ -2064,7 +2064,7 @@ func (s *server) prunePersistentPeerConnection(compressedPubKey [33]byte) {
 // the target peers.
 //
 // NOTE: This function is safe for concurrent access.
-func (s *server) BroadcastMessage(skips map[routing.Vertex]struct{},
+func (s *server) BroadcastMessage(skips map[route.Vertex]struct{},
 	msgs ...lnwire.Message) error {
 
 	srvrLog.Debugf("Broadcasting %v messages", len(msgs))

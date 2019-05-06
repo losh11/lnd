@@ -27,6 +27,7 @@ import (
 	"github.com/lightningnetwork/lnd/lntest"
 	"github.com/lightningnetwork/lnd/lnwire"
 	"github.com/lightningnetwork/lnd/routing"
+	"github.com/lightningnetwork/lnd/routing/route"
 	"github.com/lightningnetwork/lnd/ticker"
 )
 
@@ -272,7 +273,7 @@ func (r *mockGraphSource) GetChannelByID(chanID lnwire.ShortChannelID) (
 }
 
 func (r *mockGraphSource) FetchLightningNode(
-	nodePub routing.Vertex) (*channeldb.LightningNode, error) {
+	nodePub route.Vertex) (*channeldb.LightningNode, error) {
 
 	for _, node := range r.nodes {
 		if bytes.Equal(nodePub[:], node.PubKeyBytes[:]) {
@@ -285,7 +286,7 @@ func (r *mockGraphSource) FetchLightningNode(
 
 // IsStaleNode returns true if the graph source has a node announcement for the
 // target node with a more recent timestamp.
-func (r *mockGraphSource) IsStaleNode(nodePub routing.Vertex, timestamp time.Time) bool {
+func (r *mockGraphSource) IsStaleNode(nodePub route.Vertex, timestamp time.Time) bool {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -312,7 +313,7 @@ func (r *mockGraphSource) IsStaleNode(nodePub routing.Vertex, timestamp time.Tim
 
 // IsPublicNode determines whether the given vertex is seen as a public node in
 // the graph from the graph's source node's point of view.
-func (r *mockGraphSource) IsPublicNode(node routing.Vertex) (bool, error) {
+func (r *mockGraphSource) IsPublicNode(node route.Vertex) (bool, error) {
 	for _, info := range r.infos {
 		if !bytes.Equal(node[:], info.NodeKey1Bytes[:]) &&
 			!bytes.Equal(node[:], info.NodeKey2Bytes[:]) {
@@ -721,7 +722,7 @@ func createTestCtx(startHeight uint32) (*testCtx, func(), error) {
 	broadcastedMessage := make(chan msgWithSenders, 10)
 	gossiper := New(Config{
 		Notifier: notifier,
-		Broadcast: func(senders map[routing.Vertex]struct{},
+		Broadcast: func(senders map[route.Vertex]struct{},
 			msgs ...lnwire.Message) error {
 
 			for _, msg := range msgs {
@@ -741,17 +742,16 @@ func createTestCtx(startHeight uint32) (*testCtx, func(), error) {
 			c := make(chan struct{})
 			return c
 		},
-		Router:                    router,
-		TrickleDelay:              trickleDelay,
-		RetransmitDelay:           retransmitDelay,
-		ProofMatureDelta:          proofMatureDelta,
-		WaitingProofStore:         waitingProofStore,
-		MessageStore:              newMockMessageStore(),
-		RotateTicker:              ticker.NewForce(DefaultSyncerRotationInterval),
-		HistoricalSyncTicker:      ticker.NewForce(DefaultHistoricalSyncInterval),
-		ActiveSyncerTimeoutTicker: ticker.NewForce(DefaultActiveSyncerTimeout),
-		NumActiveSyncers:          3,
-		AnnSigner:                 &mockSigner{nodeKeyPriv1},
+		Router:               router,
+		TrickleDelay:         trickleDelay,
+		RetransmitDelay:      retransmitDelay,
+		ProofMatureDelta:     proofMatureDelta,
+		WaitingProofStore:    waitingProofStore,
+		MessageStore:         newMockMessageStore(),
+		RotateTicker:         ticker.NewForce(DefaultSyncerRotationInterval),
+		HistoricalSyncTicker: ticker.NewForce(DefaultHistoricalSyncInterval),
+		NumActiveSyncers:     3,
+		AnnSigner:            &mockSigner{nodeKeyPriv1},
 	}, nodeKeyPub1)
 
 	if err := gossiper.Start(); err != nil {
@@ -786,7 +786,7 @@ func TestProcessAnnouncement(t *testing.T) {
 	defer cleanup()
 
 	assertSenderExistence := func(sender *btcec.PublicKey, msg msgWithSenders) {
-		if _, ok := msg.senders[routing.NewVertex(sender)]; !ok {
+		if _, ok := msg.senders[route.NewVertex(sender)]; !ok {
 			t.Fatalf("sender=%x not present in %v",
 				sender.SerializeCompressed(), spew.Sdump(msg))
 		}
@@ -1480,20 +1480,19 @@ func TestSignatureAnnouncementRetryAtStartup(t *testing.T) {
 	// the message to the peer.
 	ctx.gossiper.Stop()
 	gossiper := New(Config{
-		Notifier:                  ctx.gossiper.cfg.Notifier,
-		Broadcast:                 ctx.gossiper.cfg.Broadcast,
-		NotifyWhenOnline:          ctx.gossiper.reliableSender.cfg.NotifyWhenOnline,
-		NotifyWhenOffline:         ctx.gossiper.reliableSender.cfg.NotifyWhenOffline,
-		Router:                    ctx.gossiper.cfg.Router,
-		TrickleDelay:              trickleDelay,
-		RetransmitDelay:           retransmitDelay,
-		ProofMatureDelta:          proofMatureDelta,
-		WaitingProofStore:         ctx.gossiper.cfg.WaitingProofStore,
-		MessageStore:              ctx.gossiper.cfg.MessageStore,
-		RotateTicker:              ticker.NewForce(DefaultSyncerRotationInterval),
-		HistoricalSyncTicker:      ticker.NewForce(DefaultHistoricalSyncInterval),
-		ActiveSyncerTimeoutTicker: ticker.NewForce(DefaultActiveSyncerTimeout),
-		NumActiveSyncers:          3,
+		Notifier:             ctx.gossiper.cfg.Notifier,
+		Broadcast:            ctx.gossiper.cfg.Broadcast,
+		NotifyWhenOnline:     ctx.gossiper.reliableSender.cfg.NotifyWhenOnline,
+		NotifyWhenOffline:    ctx.gossiper.reliableSender.cfg.NotifyWhenOffline,
+		Router:               ctx.gossiper.cfg.Router,
+		TrickleDelay:         trickleDelay,
+		RetransmitDelay:      retransmitDelay,
+		ProofMatureDelta:     proofMatureDelta,
+		WaitingProofStore:    ctx.gossiper.cfg.WaitingProofStore,
+		MessageStore:         ctx.gossiper.cfg.MessageStore,
+		RotateTicker:         ticker.NewForce(DefaultSyncerRotationInterval),
+		HistoricalSyncTicker: ticker.NewForce(DefaultHistoricalSyncInterval),
+		NumActiveSyncers:     3,
 	}, ctx.gossiper.selfKey)
 	if err != nil {
 		t.Fatalf("unable to recreate gossiper: %v", err)
@@ -1989,7 +1988,7 @@ func TestDeDuplicatedAnnouncements(t *testing.T) {
 	if len(announcements.nodeAnnouncements) != 2 {
 		t.Fatal("node announcement not replaced in batch")
 	}
-	nodeID := routing.NewVertex(nodeKeyPriv2.PubKey())
+	nodeID := route.NewVertex(nodeKeyPriv2.PubKey())
 	stored, ok := announcements.nodeAnnouncements[nodeID]
 	if !ok {
 		t.Fatalf("node announcement not found in batch")

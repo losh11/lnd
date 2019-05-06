@@ -123,7 +123,7 @@ func Main(appDir string, lis, walletUnlockLis net.Listener) error {
 	case cfg.Bitcoin.SimNet || cfg.Litecoin.SimNet:
 		network = "simnet"
 
-	case cfg.Bitcoin.RegTest:
+	case cfg.Bitcoin.RegTest || cfg.Litecoin.RegTest:
 		network = "regtest"
 	}
 
